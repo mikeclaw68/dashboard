@@ -1127,3 +1127,51 @@ function updateCountdown() {
     </div>
   `;
 }
+
+// Daily Quote Widget
+const quoteText = document.querySelector('.quote-text');
+const quoteAuthor = document.querySelector('.quote-author');
+const quoteRefreshBtn = document.getElementById('quote-refresh');
+
+// Fallback quotes in case API fails
+const fallbackQuotes = [
+  { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+  { text: "Innovation distinguishes between a leader and a follower.", author: "Steve Jobs" },
+  { text: "Stay hungry, stay foolish.", author: "Steve Jobs" },
+  { text: "Life is what happens when you're busy making other plans.", author: "John Lennon" },
+  { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+  { text: "It does not matter how slowly you go as long as you do not stop.", author: "Confucius" },
+  { text: "Success is not final, failure is not fatal: it is the courage to continue that counts.", author: "Winston Churchill" },
+  { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+  { text: "The only impossible journey is the one you never begin.", author: "Tony Robbins" },
+  { text: "What you get by achieving your goals is not as important as what you become by achieving your goals.", author: "Zig Ziglar" }
+];
+
+async function fetchQuote() {
+  quoteText.textContent = 'Loading...';
+  quoteAuthor.textContent = '--';
+  
+  try {
+    // Using quotable.io API (free, no key required)
+    const res = await fetch('https://api.quotable.io/random?tags=motivational|inspirational');
+    
+    if (!res.ok) {
+      throw new Error('API failed');
+    }
+    
+    const data = await res.json();
+    quoteText.textContent = data.content;
+    quoteAuthor.textContent = data.author;
+  } catch (e) {
+    console.error('Quote fetch error:', e);
+    // Use fallback
+    const randomQuote = fallbackQuotes[Math.floor(Math.random() * fallbackQuotes.length)];
+    quoteText.textContent = randomQuote.text;
+    quoteAuthor.textContent = randomQuote.author;
+  }
+}
+
+quoteRefreshBtn.addEventListener('click', fetchQuote);
+
+// Initial fetch
+fetchQuote();

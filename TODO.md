@@ -21,10 +21,10 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] BMI calculator
 - [x] Pomodoro timer
 - [x] Countdown timer to specific date
+- [x] Daily quote/motivation
 
 ## New Features to Build (20+)
 
-- [ ] Daily quote/motivation
 - [ ] Habit tracker
 - [ ] Book reading tracker
 - [ ] Water intake tracker
@@ -54,4 +54,5 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - CoinGecko API for crypto prices
 - Yahoo Finance API for stock prices
 - ExchangeRate-API for currency conversion
+- Quotable API for quotes
 - localStorage for persistence
