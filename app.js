@@ -841,3 +841,70 @@ currencyTo.addEventListener('change', () => {
 
 // Initial fetch
 fetchExchangeRates();
+
+// BMI Calculator Widget
+const bmiHeight = document.getElementById('bmi-height');
+const bmiWeight = document.getElementById('bmi-weight');
+const bmiCalculateBtn = document.getElementById('bmi-calculate');
+const bmiValue = document.getElementById('bmi-value');
+const bmiCategory = document.getElementById('bmi-category');
+
+function calculateBMI() {
+  const height = parseFloat(bmiHeight.value);
+  const weight = parseFloat(bmiWeight.value);
+  
+  if (!height || !weight || height <= 0 || weight <= 0) {
+    bmiValue.textContent = '--';
+    bmiCategory.textContent = 'Enter valid height and weight';
+    bmiCategory.className = 'bmi-category';
+    return;
+  }
+  
+  // BMI = weight (kg) / height (m)^2
+  const heightM = height / 100;
+  const bmi = weight / (heightM * heightM);
+  const bmiRounded = bmi.toFixed(1);
+  
+  bmiValue.textContent = bmiRounded;
+  
+  // Determine category
+  let category, categoryClass;
+  if (bmi < 18.5) {
+    category = 'Underweight';
+    categoryClass = 'underweight';
+  } else if (bmi < 25) {
+    category = 'Normal weight';
+    categoryClass = 'normal';
+  } else if (bmi < 30) {
+    category = 'Overweight';
+    categoryClass = 'overweight';
+  } else {
+    category = 'Obese';
+    categoryClass = 'obese';
+  }
+  
+  bmiCategory.textContent = category;
+  bmiCategory.className = 'bmi-category ' + categoryClass;
+  
+  // Save to localStorage
+  localStorage.setItem('dashboard-bmi-height', height);
+  localStorage.setItem('dashboard-bmi-weight', weight);
+}
+
+bmiCalculateBtn.addEventListener('click', calculateBMI);
+
+// Also calculate on Enter key
+bmiWeight.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') calculateBMI();
+});
+
+// Load saved values
+const savedHeight = localStorage.getItem('dashboard-bmi-height');
+const savedWeight = localStorage.getItem('dashboard-bmi-weight');
+if (savedHeight) bmiHeight.value = savedHeight;
+if (savedWeight) bmiWeight.value = savedWeight;
+
+// Auto-calculate if we have saved values
+if (savedHeight && savedWeight) {
+  calculateBMI();
+}

@@ -18,10 +18,10 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] Cryptocurrency prices
 - [x] Stock market widget
 - [x] Currency converter
+- [x] BMI calculator
 
 ## New Features to Build (20+)
 
-- [ ] BMI calculator
 - [ ] Pomodoro timer
 - [ ] Countdown timer to specific date
 - [ ] Daily quote/motivation
