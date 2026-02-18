@@ -1715,3 +1715,108 @@ body.bg-image {
 .water-footer button:hover {
   color: rgba(255, 255, 255, 0.8);
 }
+
+/* Sleep Tracker Widget */
+.sleep h3 {
+  margin-bottom: 15px;
+}
+
+.sleep-input {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.sleep-time {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.sleep-time label {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.sleep-time input {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-size: 1rem;
+}
+
+.sleep-time input:focus {
+  outline: 2px solid #4fc3f7;
+}
+
+.sleep button#sleep-log {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #4fc3f7;
+  color: #000;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 15px;
+  transition: background 0.2s;
+}
+
+.sleep button#sleep-log:hover {
+  background: #29b6f6;
+}
+
+.sleep-stats {
+  text-align: center;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.sleep-average {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sleep-label {
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+
+.sleep-value {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #4fc3f7;
+}
+
+.sleep-history {
+  list-style: none;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.sleep-history li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 6px;
+  margin-bottom: 5px;
+  background: rgba(0, 0, 0, 0.2);
+  font-size: 0.85rem;
+}
+
+.sleep-history .sleep-date {
+  opacity: 0.7;
+}
+
+.sleep-history .sleep-duration {
+  font-weight: 600;
+  color: #4fc3f7;
+}

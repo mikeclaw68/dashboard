@@ -192,6 +192,27 @@
       <div class="water-footer">
         <button id="water-reset">Reset Today</button>
       </div>
+
+    <div class="widget sleep">
+      <h3>Sleep Tracker</h3>
+      <div class="sleep-input">
+        <div class="sleep-time">
+          <label>Bedtime</label>
+          <input type="time" id="sleep-bedtime" value="23:00">
+        </div>
+        <div class="sleep-time">
+          <label>Wake up</label>
+          <input type="time" id="sleep-waketime" value="07:00">
+        </div>
+      </div>
+      <button id="sleep-log">Log Sleep</button>
+      <div class="sleep-stats">
+        <div class="sleep-average">
+          <span class="sleep-label">Average (7 days)</span>
+          <span class="sleep-value" id="sleep-average">--</span>
+        </div>
+      </div>
+      <ul class="sleep-history" id="sleep-history"></ul>
     </div>
 
     <div class="widget calendar">

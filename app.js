@@ -1420,3 +1420,111 @@ waterResetBtn.addEventListener('click', () => {
 
 // Initial display
 updateWaterDisplay();
+
+// Sleep Tracker Widget
+const sleepBedtime = document.getElementById('sleep-bedtime');
+const sleepWaketime = document.getElementById('sleep-waketime');
+const sleepLogBtn = document.getElementById('sleep-log');
+const sleepAverageEl = document.getElementById('sleep-average');
+const sleepHistoryEl = document.getElementById('sleep-history');
+
+let sleepData = JSON.parse(localStorage.getItem('dashboard-sleep') || '[]');
+
+function getTodayKey() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function calculateHours(bedtime, waketime) {
+  const [bedH, bedM] = bedtime.split(':').map(Number);
+  const [wakeH, wakeM] = waketime.split(':').map(Number);
+  
+  let bedMinutes = bedH * 60 + bedM;
+  let wakeMinutes = wakeH * 60 + wakeM;
+  
+  // If wake time is before bed time, add 24 hours
+  if (wakeMinutes <= bedMinutes) {
+    wakeMinutes += 24 * 60;
+  }
+  
+  const diffMinutes = wakeMinutes - bedMinutes;
+  const hours = diffMinutes / 60;
+  return hours;
+}
+
+function formatHours(hours) {
+  const h = Math.floor(hours);
+  const m = Math.round((hours - h) * 60);
+  return `${h}h ${m}m`;
+}
+
+function formatDate(dateStr) {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+}
+
+function saveSleep() {
+  localStorage.setItem('dashboard-sleep', JSON.stringify(sleepData));
+}
+
+function updateAverage() {
+  if (sleepData.length === 0) {
+    sleepAverageEl.textContent = '--';
+    return;
+  }
+  
+  // Get last 7 days of data
+  const recent = sleepData.slice(-7);
+  const totalHours = recent.reduce((sum, entry) => sum + entry.hours, 0);
+  const avg = totalHours / recent.length;
+  sleepAverageEl.textContent = formatHours(avg);
+}
+
+function renderHistory() {
+  sleepHistoryEl.innerHTML = '';
+  
+  if (sleepData.length === 0) {
+    sleepHistoryEl.innerHTML = '<li style="opacity: 0.5; text-align: center;">No sleep logged yet</li>';
+    return;
+  }
+  
+  // Show last 5 entries (most recent first)
+  const recent = sleepData.slice(-5).reverse();
+  
+  recent.forEach(entry => {
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <span class="sleep-date">${formatDate(entry.date)}</span>
+      <span class="sleep-duration">${formatHours(entry.hours)}</span>
+    `;
+    sleepHistoryEl.appendChild(li);
+  });
+}
+
+sleepLogBtn.addEventListener('click', () => {
+  const bedtime = sleepBedtime.value;
+  const waketime = sleepWaketime.value;
+  
+  if (!bedtime || !waketime) return;
+  
+  const hours = calculateHours(bedtime, waketime);
+  const today = getTodayKey();
+  
+  // Remove existing entry for today if exists
+  sleepData = sleepData.filter(entry => entry.date !== today);
+  
+  // Add new entry
+  sleepData.push({
+    date: today,
+    bedtime: bedtime,
+    waketime: waketime,
+    hours: hours
+  });
+  
+  saveSleep();
+  updateAverage();
+  renderHistory();
+});
+
+// Initial load
+updateAverage();
+renderHistory();
