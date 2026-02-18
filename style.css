@@ -3274,3 +3274,86 @@ body.bg-image {
 .package-event-location {
   font-size: 0.85rem;
 }
+
+/* Network Speed Test Widget */
+.speedtest h3 {
+  margin-bottom: 15px;
+}
+
+.speedtest-display {
+  text-align: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.speedtest-result {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 5px;
+}
+
+.speedtest-value {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #4fc3f7;
+}
+
+.speedtest-unit {
+  font-size: 1.2rem;
+  opacity: 0.7;
+}
+
+.speedtest-label {
+  font-size: 0.85rem;
+  opacity: 0.6;
+  margin-top: 5px;
+}
+
+.speedtest-details {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 15px;
+}
+
+.speedtest-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.speedtest-detail span:first-child {
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+.speedtest-detail span:last-child {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.speedtest-button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #4fc3f7;
+  color: #000;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.speedtest-button:hover {
+  background: #29b6f6;
+}
+
+.speedtest-button:disabled {
+  background: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.5);
+  cursor: not-allowed;
+}

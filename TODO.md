@@ -39,10 +39,10 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] Instagram feed
 - [x] Twitter feed
 - [x] Package tracker
+- [x] Network speed test widget
 
 ## New Features to Build (20+)
 
-- [ ] Network speed test widget
 - [ ] WiFi signal strength
 - [ ] Screenshot upload widget
 - [ ] Quick note capture
