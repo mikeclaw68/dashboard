@@ -2044,3 +2044,107 @@ body.bg-image {
 .expense-list li:hover .expense-delete {
   opacity: 1;
 }
+
+/* Birthday Reminders Widget */
+.birthday h3 {
+  margin-bottom: 15px;
+}
+
+.birthday-input {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.birthday-input input {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.birthday-input input:focus {
+  outline: 2px solid #4fc3f7;
+}
+
+.birthday-input input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.birthday-input button {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #4fc3f7;
+  color: #000;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.birthday-input button:hover {
+  background: #29b6f6;
+}
+
+.birthday-list {
+  list-style: none;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.birthday-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.birthday-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.birthday-name {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.birthday-date {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.birthday-days {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.birthday-days.soon {
+  color: #ffb74d;
+}
+
+.birthday-days.today {
+  color: #4caf50;
+}
+
+.birthday-delete {
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  cursor: pointer;
+  font-size: 0.9rem;
+  opacity: 0;
+  margin-left: 10px;
+  transition: opacity 0.2s;
+}
+
+.birthday-list li:hover .birthday-delete {
+  opacity: 1;
+}

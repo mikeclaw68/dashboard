@@ -28,10 +28,10 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] Sleep tracker
 - [x] Mood tracker
 - [x] Expense tracker
+- [x] Birthday reminders
 
 ## New Features to Build (20+)
 
-- [ ] Birthday reminders
 - [ ] Holiday countdown
 - [ ] GitHub contributions widget
 - [ ] Steam game status

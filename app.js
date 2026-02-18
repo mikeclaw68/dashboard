@@ -1731,3 +1731,108 @@ expenseAmount.addEventListener('keypress', (e) => {
 // Initial load
 updateSummary();
 renderExpenses();
+
+// Birthday Reminders Widget
+const birthdayName = document.getElementById('birthday-name');
+const birthdayDate = document.getElementById('birthday-date');
+const birthdayAddBtn = document.getElementById('birthday-add');
+const birthdayListEl = document.getElementById('birthday-list');
+
+let birthdays = JSON.parse(localStorage.getItem('dashboard-birthdays') || '[]');
+
+function saveBirthdays() {
+  localStorage.setItem('dashboard-birthdays', JSON.stringify(birthdays));
+}
+
+function getDaysUntil(dateStr) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  const [year, month, day] = dateStr.split('-').map(Number);
+  const birthday = new Date(today.getFullYear(), month - 1, day);
+  
+  // If birthday has passed this year, check next year
+  if (birthday < today) {
+    birthday.setFullYear(today.getFullYear() + 1);
+  }
+  
+  const diffTime = birthday - today;
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  return diffDays;
+}
+
+function formatDate(dateStr) {
+  const [year, month, day] = dateStr.split('-');
+  const date = new Date(year, month - 1, day);
+  return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+}
+
+function renderBirthdays() {
+  birthdayListEl.innerHTML = '';
+  
+  if (birthdays.length === 0) {
+    birthdayListEl.innerHTML = '<li style="opacity: 0.5; text-align: center;">No birthdays added</li>';
+    return;
+  }
+  
+  // Sort by days until birthday
+  const sorted = birthdays.map(b => ({...b, days: getDaysUntil(b.date)}))
+    .sort((a, b) => a.days - b.days);
+  
+  sorted.forEach((b, index) => {
+    const originalIndex = birthdays.findIndex(x => x.name === b.name && x.date === b.date);
+    const li = document.createElement('li');
+    
+    let daysText, daysClass;
+    if (b.days === 0) {
+      daysText = '🎂 Today!';
+      daysClass = 'today';
+    } else if (b.days <= 7) {
+      daysText = `In ${b.days} days`;
+      daysClass = 'soon';
+    } else {
+      daysText = `In ${b.days} days`;
+      daysClass = '';
+    }
+    
+    li.innerHTML = `
+      <div class="birthday-info">
+        <span class="birthday-name">${b.name}</span>
+        <span class="birthday-date">${formatDate(b.date)}</span>
+      </div>
+      <span class="birthday-days ${daysClass}">${daysText}</span>
+      <button class="birthday-delete" data-index="${originalIndex}">✕</button>
+    `;
+    
+    li.querySelector('.birthday-delete').addEventListener('click', (e) => {
+      const idx = parseInt(e.target.dataset.index);
+      birthdays.splice(idx, 1);
+      saveBirthdays();
+      renderBirthdays();
+    });
+    
+    birthdayListEl.appendChild(li);
+  });
+}
+
+function addBirthday() {
+  const name = birthdayName.value.trim();
+  const date = birthdayDate.value;
+  
+  if (!name || !date) return;
+  
+  birthdays.push({ name, date });
+  saveBirthdays();
+  birthdayName.value = '';
+  birthdayDate.value = '';
+  renderBirthdays();
+}
+
+birthdayAddBtn.addEventListener('click', addBirthday);
+birthdayDate.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') addBirthday();
+});
+
+// Initial load
+renderBirthdays();
