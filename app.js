@@ -591,3 +591,91 @@ addTimezoneBtn.addEventListener('click', () => {
 
 renderWorldClock();
 setInterval(updateWorldClockTimes, 1000);
+
+// Cryptocurrency Prices
+const cryptoList = document.getElementById('crypto-list');
+const cryptoRefreshBtn = document.getElementById('crypto-refresh');
+
+// Top cryptocurrencies to track
+const cryptoCoins = [
+  { id: 'bitcoin', symbol: 'BTC', name: 'Bitcoin', icon: '₿' },
+  { id: 'ethereum', symbol: 'ETH', name: 'Ethereum', icon: 'Ξ' },
+  { id: 'tether', symbol: 'USDT', name: 'Tether', icon: '₮' },
+  { id: 'binancecoin', symbol: 'BNB', name: 'BNB', icon: '◈' },
+  { id: 'solana', symbol: 'SOL', name: 'Solana', icon: '◎' },
+  { id: 'ripple', symbol: 'XRP', name: 'XRP', icon: '✕' },
+  { id: 'cardano', symbol: 'ADA', name: 'Cardano', icon: '₳' },
+  { id: 'dogecoin', symbol: 'DOGE', name: 'Dogecoin', icon: 'Ð' }
+];
+
+function formatPrice(price) {
+  if (price >= 1000) {
+    return '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  } else if (price >= 1) {
+    return '$' + price.toFixed(2);
+  } else {
+    return '$' + price.toFixed(4);
+  }
+}
+
+function formatChange(change) {
+  const sign = change >= 0 ? '+' : '';
+  return sign + change.toFixed(2) + '%';
+}
+
+async function fetchCryptoPrices() {
+  cryptoList.innerHTML = '<div class="crypto-loading">Loading prices...</div>';
+  
+  try {
+    const ids = cryptoCoins.map(c => c.id).join(',');
+    const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`);
+    
+    if (!res.ok) {
+      throw new Error('API request failed');
+    }
+    
+    const data = await res.json();
+    renderCryptoPrices(data);
+  } catch (e) {
+    console.error('Crypto fetch error:', e);
+    cryptoList.innerHTML = '<div class="crypto-error">Unable to load prices</div>';
+  }
+}
+
+function renderCryptoPrices(data) {
+  cryptoList.innerHTML = '';
+  
+  cryptoCoins.forEach(coin => {
+    const priceData = data[coin.id];
+    if (!priceData) return;
+    
+    const price = priceData.usd;
+    const change = priceData.usd_24h_change;
+    const changeClass = change >= 0 ? 'positive' : 'negative';
+    
+    const div = document.createElement('div');
+    div.className = 'crypto-item';
+    div.innerHTML = `
+      <div class="crypto-info">
+        <span class="crypto-icon">${coin.icon}</span>
+        <div>
+          <div class="crypto-name">${coin.name}</div>
+          <div class="crypto-symbol">${coin.symbol}</div>
+        </div>
+      </div>
+      <div class="crypto-price">
+        <div class="crypto-value">${formatPrice(price)}</div>
+        <div class="crypto-change ${changeClass}">${formatChange(change)}</div>
+      </div>
+    `;
+    cryptoList.appendChild(div);
+  });
+}
+
+cryptoRefreshBtn.addEventListener('click', fetchCryptoPrices);
+
+// Initial fetch
+fetchCryptoPrices();
+
+// Refresh every 60 seconds
+setInterval(fetchCryptoPrices, 60000);

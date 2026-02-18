@@ -15,10 +15,10 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] Todo list widget
 - [x] News/feed widget
 - [x] World clock - multiple timezones
+- [x] Cryptocurrency prices
 
 ## New Features to Build (20+)
 
-- [ ] Cryptocurrency prices
 - [ ] Stock market widget
 - [ ] Currency converter
 - [ ] BMI calculator
@@ -51,4 +51,5 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 ## Tech Stack
 - Plain HTML/CSS/JS
 - wttr.in for weather
+- CoinGecko API for crypto prices
 - localStorage for persistence
