@@ -7,9 +7,17 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   min-height: 100vh;
   color: #fff;
   padding: 20px;
+  transition: background 0.5s ease;
+}
+
+body.bg-image {
+  background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%);
 }
 
 .dashboard {
@@ -89,4 +97,40 @@ body {
 
 .notes textarea:focus {
   outline: 2px solid #4fc3f7;
+}
+
+.background input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+}
+
+.background button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #4fc3f7;
+  color: #000;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.background button:hover {
+  background: #29b6f6;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.toggle input {
+  width: 20px;
+  height: 20px;
 }

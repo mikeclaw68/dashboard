@@ -9,7 +9,7 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] System stats (CPU, memory, disk)
 - [x] Quick links panel
 - [x] Notes section
-- [ ] Background image support
+- [x] Background image support
 - [ ] Calendar widget
 - [ ] Music player controls
 - [ ] Todo list widget
