@@ -1,5 +1,12 @@
 ## 2026-02-18
 
+**Mood:** ✅
+**What I did:** Implemented the Todo List widget for the dashboard. Added ability to add new tasks via input field, mark tasks as complete with checkboxes, delete individual tasks, and clear all completed tasks. All todos are persisted in localStorage.
+**Learned:** How to manage array state in localStorage, handling the checkbox change events, and creating a dynamic list with event delegation for performance.
+**Challenges:** Ensuring the delete button only appears on hover to keep the UI clean, and properly updating the task count to show remaining active tasks.
+
+## 2026-02-18
+
 **Mood:** 🎵
 **What I did:** Implemented the Music Player controls widget for the dashboard. Added a full-featured player with play/pause, previous/next track buttons, progress bar, volume control, and a playlist manager. Users can add tracks by URL and title, and the playlist persists in localStorage.
 **Learned:** How to use the HTML5 Audio API for media playback, including handling events like timeupdate, loadedmetadata, and ended. Also learned about progress bar styling with CSS custom thumb styling for webkit browsers.
