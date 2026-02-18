@@ -1618,3 +1618,116 @@ moodBtns.forEach(btn => {
 // Initial load
 updateTodayMood();
 renderHistory();
+
+// Expense Tracker Widget
+const expenseDesc = document.getElementById('expense-desc');
+const expenseAmount = document.getElementById('expense-amount');
+const expenseCategory = document.getElementById('expense-category');
+const expenseAddBtn = document.getElementById('expense-add');
+const expenseTodayEl = document.getElementById('expense-today');
+const expenseMonthEl = document.getElementById('expense-month');
+const expenseListEl = document.getElementById('expense-list');
+
+let expenses = JSON.parse(localStorage.getItem('dashboard-expenses') || '[]');
+
+function getTodayKey() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function getMonthKey() {
+  return new Date().toISOString().slice(0, 7); // YYYY-MM
+}
+
+function formatCurrency(amount) {
+  return '$' + amount.toFixed(2);
+}
+
+function saveExpenses() {
+  localStorage.setItem('dashboard-expenses', JSON.stringify(expenses));
+}
+
+function updateSummary() {
+  const today = getTodayKey();
+  const month = getMonthKey();
+  
+  const todayTotal = expenses
+    .filter(e => e.date === today)
+    .reduce((sum, e) => sum + e.amount, 0);
+  
+  const monthTotal = expenses
+    .filter(e => e.date.startsWith(month))
+    .reduce((sum, e) => sum + e.amount, 0);
+  
+  expenseTodayEl.textContent = formatCurrency(todayTotal);
+  expenseMonthEl.textContent = formatCurrency(monthTotal);
+}
+
+function formatDate(dateStr) {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function renderExpenses() {
+  expenseListEl.innerHTML = '';
+  
+  if (expenses.length === 0) {
+    expenseListEl.innerHTML = '<li style="opacity: 0.5; text-align: center;">No expenses yet</li>';
+    return;
+  }
+  
+  // Show last 10 expenses (most recent first)
+  const recent = expenses.slice(-10).reverse();
+  
+  recent.forEach((expense, index) => {
+    const originalIndex = expenses.indexOf(expense);
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <div class="expense-info">
+        <span class="expense-desc">${expense.desc}</span>
+        <span class="expense-category">${expense.category} · ${formatDate(expense.date)}</span>
+      </div>
+      <span class="expense-amount">-${formatCurrency(expense.amount)}</span>
+      <button class="expense-delete" data-index="${originalIndex}">✕</button>
+    `;
+    
+    li.querySelector('.expense-delete').addEventListener('click', (e) => {
+      const idx = parseInt(e.target.dataset.index);
+      expenses.splice(idx, 1);
+      saveExpenses();
+      updateSummary();
+      renderExpenses();
+    });
+    
+    expenseListEl.appendChild(li);
+  });
+}
+
+function addExpense() {
+  const desc = expenseDesc.value.trim();
+  const amount = parseFloat(expenseAmount.value);
+  const category = expenseCategory.value;
+  
+  if (!desc || !amount || amount <= 0) return;
+  
+  expenses.push({
+    date: getTodayKey(),
+    desc: desc,
+    amount: amount,
+    category: category
+  });
+  
+  saveExpenses();
+  expenseDesc.value = '';
+  expenseAmount.value = '';
+  updateSummary();
+  renderExpenses();
+}
+
+expenseAddBtn.addEventListener('click', addExpense);
+expenseAmount.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') addExpense();
+});
+
+// Initial load
+updateSummary();
+renderExpenses();

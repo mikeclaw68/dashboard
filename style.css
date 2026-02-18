@@ -1921,3 +1921,126 @@ body.bg-image {
 .mood-history .mood-text {
   font-size: 0.85rem;
 }
+
+/* Expense Tracker Widget */
+.expense h3 {
+  margin-bottom: 15px;
+}
+
+.expense-input {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.expense-input input,
+.expense-input select {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.expense-input input:focus,
+.expense-input select:focus {
+  outline: 2px solid #4fc3f7;
+}
+
+.expense-input input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.expense-input select option {
+  background: #1a1a2e;
+}
+
+.expense-input button {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #4fc3f7;
+  color: #000;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.expense-input button:hover {
+  background: #29b6f6;
+}
+
+.expense-summary {
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.expense-summary span {
+  opacity: 0.7;
+}
+
+.expense-summary span#expense-today,
+.expense-summary span#expense-month {
+  color: #4fc3f7;
+  font-weight: 600;
+  opacity: 1;
+}
+
+.expense-list {
+  list-style: none;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.expense-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.expense-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.expense-desc {
+  font-size: 0.9rem;
+}
+
+.expense-category {
+  font-size: 0.75rem;
+  opacity: 0.6;
+  text-transform: capitalize;
+}
+
+.expense-amount {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ff6b6b;
+}
+
+.expense-delete {
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  cursor: pointer;
+  font-size: 0.9rem;
+  opacity: 0;
+  margin-left: 10px;
+  transition: opacity 0.2s;
+}
+
+.expense-list li:hover .expense-delete {
+  opacity: 1;
+}

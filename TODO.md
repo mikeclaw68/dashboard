@@ -27,10 +27,10 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] Water intake tracker
 - [x] Sleep tracker
 - [x] Mood tracker
+- [x] Expense tracker
 
 ## New Features to Build (20+)
 
-- [ ] Expense tracker
 - [ ] Birthday reminders
 - [ ] Holiday countdown
 - [ ] GitHub contributions widget

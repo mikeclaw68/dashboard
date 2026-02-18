@@ -234,6 +234,30 @@
       <ul class="mood-history" id="mood-history"></ul>
     </div>
 
+    <div class="widget expense">
+      <h3>Expense Tracker</h3>
+      <div class="expense-input">
+        <input type="text" id="expense-desc" placeholder="Description">
+        <input type="number" id="expense-amount" placeholder="Amount">
+        <select id="expense-category">
+          <option value="food">Food</option>
+          <option value="transport">Transport</option>
+          <option value="shopping">Shopping</option>
+          <option value="bills">Bills</option>
+          <option value="entertainment">Entertainment</option>
+          <option value="other">Other</option>
+        </select>
+        <button id="expense-add">Add</button>
+      </div>
+      <div class="expense-summary">
+        <span>Today: </span>
+        <span id="expense-today">$0.00</span>
+        <span> | Month: </span>
+        <span id="expense-month">$0.00</span>
+      </div>
+      <ul class="expense-list" id="expense-list"></ul>
+    </div>
+
     <div class="widget calendar">
       <h3>Calendar</h3>
       <div class="calendar-header">
