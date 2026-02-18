@@ -908,3 +908,129 @@ if (savedWeight) bmiWeight.value = savedWeight;
 if (savedHeight && savedWeight) {
   calculateBMI();
 }
+
+// Pomodoro Timer Widget
+const pomodoroDisplay = document.getElementById('pomodoro-display');
+const pomodoroStartBtn = document.getElementById('pomodoro-start');
+const pomodoroResetBtn = document.getElementById('pomodoro-reset');
+const pomodoroSessionsEl = document.getElementById('pomodoro-sessions');
+const pomodoroModes = document.querySelectorAll('.pomodoro-mode');
+
+let pomodoroTime = 25 * 60; // 25 minutes in seconds
+let pomodoroRemaining = pomodoroTime;
+let pomodoroInterval = null;
+let pomodoroIsRunning = false;
+let pomodoroCurrentMode = 'work';
+let pomodoroSessions = parseInt(localStorage.getItem('pomodoro-sessions') || '0');
+
+pomodoroSessionsEl.textContent = pomodoroSessions;
+
+function formatTime(seconds) {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+}
+
+function updatePomodoroDisplay() {
+  pomodoroDisplay.textContent = formatTime(pomodoroRemaining);
+  
+  // Change color based on mode
+  if (pomodoroCurrentMode === 'work') {
+    pomodoroDisplay.style.color = '#4fc3f7';
+  } else {
+    pomodoroDisplay.style.color = '#4caf50';
+  }
+}
+
+function startPomodoro() {
+  if (pomodoroIsRunning) {
+    // Pause
+    clearInterval(pomodoroInterval);
+    pomodoroIsRunning = false;
+    pomodoroStartBtn.textContent = 'Start';
+  } else {
+    // Start
+    pomodoroIsRunning = true;
+    pomodoroStartBtn.textContent = 'Pause';
+    
+    pomodoroInterval = setInterval(() => {
+      pomodoroRemaining--;
+      updatePomodoroDisplay();
+      
+      if (pomodoroRemaining <= 0) {
+        clearInterval(pomodoroInterval);
+        pomodoroIsRunning = false;
+        pomodoroStartBtn.textContent = 'Start';
+        
+        // Play notification sound (simple beep via AudioContext)
+        try {
+          const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          const oscillator = audioCtx.createOscillator();
+          const gainNode = audioCtx.createGain();
+          oscillator.connect(gainNode);
+          gainNode.connect(audioCtx.destination);
+          oscillator.frequency.value = 800;
+          gainNode.gain.value = 0.1;
+          oscillator.start();
+          oscillator.stop(audioCtx.currentTime + 0.3);
+        } catch (e) {}
+        
+        // If work session completed, increment session count
+        if (pomodoroCurrentMode === 'work') {
+          pomodoroSessions++;
+          pomodoroSessionsEl.textContent = pomodoroSessions;
+          localStorage.setItem('pomodoro-sessions', pomodoroSessions);
+        }
+        
+        // Auto-switch to next mode
+        if (pomodoroCurrentMode === 'work') {
+          // Switch to short break
+          setTimeout(() => {
+            document.querySelector('[data-type="short"]').click();
+            pomodoroRemaining = 5 * 60;
+            updatePomodoroDisplay();
+          }, 1000);
+        } else {
+          // Switch back to work
+          setTimeout(() => {
+            document.querySelector('[data-type="work"]').click();
+            pomodoroRemaining = 25 * 60;
+            updatePomodoroDisplay();
+          }, 1000);
+        }
+      }
+    }, 1000);
+  }
+}
+
+function resetPomodoro() {
+  clearInterval(pomodoroInterval);
+  pomodoroIsRunning = false;
+  pomodoroStartBtn.textContent = 'Start';
+  pomodoroRemaining = pomodoroTime;
+  updatePomodoroDisplay();
+}
+
+pomodoroStartBtn.addEventListener('click', startPomodoro);
+pomodoroResetBtn.addEventListener('click', resetPomodoro);
+
+// Mode switching
+pomodoroModes.forEach(btn => {
+  btn.addEventListener('click', () => {
+    // Update active state
+    pomodoroModes.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    // Set new time
+    pomodoroCurrentMode = btn.dataset.type;
+    pomodoroTime = parseInt(btn.dataset.time) * 60;
+    pomodoroRemaining = pomodoroTime;
+    
+    // Stop current timer
+    clearInterval(pomodoroInterval);
+    pomodoroIsRunning = false;
+    pomodoroStartBtn.textContent = 'Start';
+    
+    updatePomodoroDisplay();
+  });
+});

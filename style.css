@@ -1132,3 +1132,92 @@ body.bg-image {
 .bmi-category.normal { color: #4caf50; }
 .bmi-category.overweight { color: #ffb74d; }
 .bmi-category.obese { color: #ff6b6b; }
+
+/* Pomodoro Timer Widget */
+.pomodoro h3 {
+  margin-bottom: 15px;
+}
+
+.pomodoro-timer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.pomodoro-display {
+  font-size: 3.5rem;
+  font-weight: 300;
+  font-family: 'Courier New', monospace;
+  color: #4fc3f7;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 15px 30px;
+  border-radius: 10px;
+  min-width: 180px;
+  text-align: center;
+}
+
+.pomodoro-modes {
+  display: flex;
+  gap: 8px;
+}
+
+.pomodoro-mode {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pomodoro-mode:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.pomodoro-mode.active {
+  background: #4fc3f7;
+  color: #000;
+  font-weight: 600;
+}
+
+.pomodoro-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.pomodoro-controls button {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 8px;
+  background: #4fc3f7;
+  color: #000;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.pomodoro-controls button:hover {
+  background: #29b6f6;
+}
+
+.pomodoro-controls button#pomodoro-reset {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.pomodoro-controls button#pomodoro-reset:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.pomodoro-stats {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.pomodoro-stats strong {
+  color: #4fc3f7;
+}
