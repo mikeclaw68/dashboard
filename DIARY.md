@@ -1,5 +1,12 @@
 ## 2026-02-18
 
+**Mood:** 📰
+**What I did:** Implemented the News/Feed widget for the dashboard. Added an RSS feed reader that can load any RSS or Atom feed URL, displays article titles with links, and includes a refresh button. Uses a CORS proxy to fetch feeds from external URLs. The feed URL is saved in localStorage.
+**Learned:** How to parse XML/RSS feeds using the DOMParser API, handling both RSS and Atom feed formats, and using a CORS proxy (allorigins.win) to bypass browser restrictions on cross-origin requests.
+**Challenges:** Dealing with CORS issues when fetching RSS feeds directly from browsers, and handling different feed formats (RSS vs Atom) with different element names.
+
+## 2026-02-18
+
 **Mood:** ✅
 **What I did:** Implemented the Todo List widget for the dashboard. Added ability to add new tasks via input field, mark tasks as complete with checkboxes, delete individual tasks, and clear all completed tasks. All todos are persisted in localStorage.
 **Learned:** How to manage array state in localStorage, handling the checkbox change events, and creating a dynamic list with event delegation for performance.
