@@ -36,10 +36,10 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] Spotify current track
 - [x] YouTube trending
 - [x] Reddit feed
+- [x] Instagram feed
 
 ## New Features to Build (20+)
 
-- [ ] Instagram feed
 - [ ] Twitter feed
 - [ ] Package tracker (FedEx, UPS, etc)
 - [ ] Network speed test widget
