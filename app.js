@@ -1836,3 +1836,112 @@ birthdayDate.addEventListener('keypress', (e) => {
 
 // Initial load
 renderBirthdays();
+
+// Holiday Countdown Widget
+const holidayListEl = document.getElementById('holiday-list');
+
+// Default holidays for the year
+const defaultHolidays = [
+  { name: "New Year's Day", month: 0, day: 1 },
+  { name: "Valentine's Day", month: 1, day: 14 },
+  { name: "Easter", month: 3, day: 20, variable: true }, // Approximate
+  { name: "Memorial Day", month: 4, day: 26, variable: true },
+  { name: "Independence Day", month: 6, day: 4 },
+  { name: "Labor Day", month: 8, day: 1, variable: true },
+  { name: "Halloween", month: 9, day: 31 },
+  { name: "Thanksgiving", month: 10, day: 27, variable: true },
+  { name: "Christmas", month: 11, day: 25 },
+  { name: "New Year's Eve", month: 11, day: 31 }
+];
+
+function getHolidays() {
+  let holidays = JSON.parse(localStorage.getItem('dashboard-holidays'));
+  if (!holidays) {
+    holidays = [...defaultHolidays];
+    localStorage.setItem('dashboard-holidays', JSON.stringify(holidays));
+  }
+  return holidays;
+}
+
+function getDaysUntil(date) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  const year = today.getFullYear();
+  let holidayDate = new Date(year, date.month, date.day);
+  
+  // If holiday has passed this year, show next year
+  if (holidayDate < today) {
+    holidayDate.setFullYear(year + 1);
+  }
+  
+  const diffTime = holidayDate - today;
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  return diffDays;
+}
+
+function formatDate(month, day) {
+  const date = new Date(2000, month, day);
+  return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+}
+
+function renderHolidays() {
+  const holidays = getHolidays();
+  
+  // Calculate days for each holiday
+  const withDays = holidays.map(h => ({
+    ...h,
+    days: getDaysUntil(h)
+  }));
+  
+  // Sort by days until
+  const sorted = withDays.sort((a, b) => a.days - b.days);
+  
+  // Show top 6 upcoming holidays
+  const upcoming = sorted.slice(0, 6);
+  
+  holidayListEl.innerHTML = '';
+  
+  upcoming.forEach(holiday => {
+    const div = document.createElement('div');
+    div.className = 'holiday-item';
+    if (holiday.days === 0) {
+      div.innerHTML = `
+        <div class="holiday-info">
+          <span class="holiday-name">🎉 ${holiday.name}</span>
+          <span class="holiday-date">${formatDate(holiday.month, holiday.day)}</span>
+        </div>
+        <div class="holiday-countdown">
+          <div class="holiday-days">Today!</div>
+        </div>
+      `;
+    } else if (holiday.days < 0) {
+      div.className += ' holiday-passed';
+      div.innerHTML = `
+        <div class="holiday-info">
+          <span class="holiday-name">${holiday.name}</span>
+          <span class="holiday-date">${formatDate(holiday.month, holiday.day)}</span>
+        </div>
+        <div class="holiday-countdown">
+          <div class="holiday-days">Passed</div>
+        </div>
+      `;
+    } else {
+      div.innerHTML = `
+        <div class="holiday-info">
+          <span class="holiday-name">${holiday.name}</span>
+          <span class="holiday-date">${formatDate(holiday.month, holiday.day)}</span>
+        </div>
+        <div class="holiday-countdown">
+          <div class="holiday-days">${holiday.days}</div>
+          <div class="holiday-label">days</div>
+        </div>
+      `;
+    }
+    holidayListEl.appendChild(div);
+  });
+}
+
+// Initial render
+renderHolidays();

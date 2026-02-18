@@ -2148,3 +2148,63 @@ body.bg-image {
 .birthday-list li:hover .birthday-delete {
   opacity: 1;
 }
+
+/* Holiday Countdown Widget */
+.holiday h3 {
+  margin-bottom: 15px;
+}
+
+.holiday-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.holiday-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.holiday-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.holiday-name {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.holiday-date {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.holiday-countdown {
+  text-align: right;
+}
+
+.holiday-days {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #4fc3f7;
+}
+
+.holiday-label {
+  font-size: 0.7rem;
+  opacity: 0.6;
+}
+
+.holiday-passed {
+  opacity: 0.5;
+}
+
+.holiday-passed .holiday-days {
+  color: #ff6b6b;
+  text-decoration: line-through;
+}
