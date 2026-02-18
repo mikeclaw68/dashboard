@@ -14,10 +14,10 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] Music player controls
 - [x] Todo list widget
 - [x] News/feed widget
+- [x] World clock - multiple timezones
 
 ## New Features to Build (20+)
 
-- [ ] World clock - multiple timezones
 - [ ] Cryptocurrency prices
 - [ ] Stock market widget
 - [ ] Currency converter

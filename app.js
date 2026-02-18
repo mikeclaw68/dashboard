@@ -523,3 +523,71 @@ applyBackground();
 // Event listeners
 bgToggle.addEventListener('change', applyBackground);
 bgApplyBtn.addEventListener('click', applyBackground);
+
+// World Clock
+let timezones = JSON.parse(localStorage.getItem('dashboard-timezones') || '[]');
+
+const timezoneSelect = document.getElementById('timezone-select');
+const addTimezoneBtn = document.getElementById('add-timezone-btn');
+const worldClockList = document.getElementById('world-clock-list');
+
+function renderWorldClock() {
+  worldClockList.innerHTML = '';
+  timezones.forEach((tz, index) => {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('en-GB', { 
+      timeZone: tz,
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    const cityName = tz.split('/').pop().replace(/_/g, ' ');
+    
+    const div = document.createElement('div');
+    div.className = 'world-clock-item';
+    div.innerHTML = `
+      <span class="city">${cityName}</span>
+      <span class="time">${timeStr}</span>
+      <button class="remove-btn" data-index="${index}">✕</button>
+    `;
+    worldClockList.appendChild(div);
+  });
+  
+  // Remove buttons
+  worldClockList.querySelectorAll('.remove-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const index = parseInt(e.target.dataset.index);
+      timezones.splice(index, 1);
+      localStorage.setItem('dashboard-timezones', JSON.stringify(timezones));
+      renderWorldClock();
+    });
+  });
+}
+
+function updateWorldClockTimes() {
+  const items = worldClockList.querySelectorAll('.world-clock-item');
+  items.forEach((item, index) => {
+    const tz = timezones[index];
+    if (tz) {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-GB', { 
+        timeZone: tz,
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      item.querySelector('.time').textContent = timeStr;
+    }
+  });
+}
+
+addTimezoneBtn.addEventListener('click', () => {
+  const tz = timezoneSelect.value;
+  if (tz && !timezones.includes(tz)) {
+    timezones.push(tz);
+    localStorage.setItem('dashboard-timezones', JSON.stringify(timezones));
+    renderWorldClock();
+    timezoneSelect.value = '';
+  }
+});
+
+renderWorldClock();
+setInterval(updateWorldClockTimes, 1000);

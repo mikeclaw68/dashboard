@@ -671,3 +671,87 @@ body.bg-image {
   width: 20px;
   height: 20px;
 }
+
+/* World Clock Widget */
+.world-clock h3 {
+  margin-bottom: 15px;
+}
+
+.world-clock-list {
+  margin-bottom: 15px;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.world-clock-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.world-clock-item:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.world-clock-item .city {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.world-clock-item .time {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #4fc3f7;
+}
+
+.world-clock-item .remove-btn {
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  cursor: pointer;
+  font-size: 0.9rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+  margin-left: 8px;
+}
+
+.world-clock-item:hover .remove-btn {
+  opacity: 1;
+}
+
+.world-clock-add {
+  display: flex;
+  gap: 8px;
+}
+
+.world-clock-add select {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-size: 0.85rem;
+}
+
+.world-clock-add select option {
+  background: #1a1a2e;
+}
+
+.world-clock-add button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background: #4fc3f7;
+  color: #000;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.world-clock-add button:hover {
+  background: #29b6f6;
+}
