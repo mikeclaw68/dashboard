@@ -3009,3 +3009,40 @@ function hideScreenshot() {
   screenshotPreview.style.display = 'none';
   screenshotInput.value = '';
 }
+
+// Quick Note Capture Widget
+const quickNoteText = document.getElementById('quicknote-text');
+const quickNoteSaveBtn = document.getElementById('quicknote-save');
+const quickNoteClearBtn = document.getElementById('quicknote-clear');
+
+// Load saved note
+const savedNote = localStorage.getItem('dashboard-quicknote');
+if (savedNote) {
+  quickNoteText.value = savedNote;
+}
+
+quickNoteSaveBtn.addEventListener('click', () => {
+  const note = quickNoteText.value.trim();
+  localStorage.setItem('dashboard-quicknote', note);
+  quickNoteText.placeholder = 'Note saved!';
+  setTimeout(() => {
+    quickNoteText.placeholder = 'Type a quick note...';
+  }, 2000);
+});
+
+quickNoteClearBtn.addEventListener('click', () => {
+  quickNoteText.value = '';
+  localStorage.removeItem('dashboard-quicknote');
+});
+
+// Auto-save on typing (debounced)
+let saveTimeout;
+quickNoteText.addEventListener('input', () => {
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(() => {
+    const note = quickNoteText.value.trim();
+    if (note) {
+      localStorage.setItem('dashboard-quicknote', note);
+    }
+  }, 1000);
+});

@@ -42,10 +42,10 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] Network speed test widget
 - [x] WiFi signal strength
 - [x] Screenshot upload widget
+- [x] Quick note capture
 
 ## New Features to Build (20+)
 
-- [ ] Quick note capture
 - [ ] Voice memo widget
 
 ## Tech Stack
