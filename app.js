@@ -1528,3 +1528,93 @@ sleepLogBtn.addEventListener('click', () => {
 // Initial load
 updateAverage();
 renderHistory();
+
+// Mood Tracker Widget
+const moodBtns = document.querySelectorAll('.mood-btn');
+const moodNoteInput = document.getElementById('mood-note');
+const moodTodayEl = document.getElementById('mood-today');
+const moodHistoryEl = document.getElementById('mood-history');
+
+let selectedMood = null;
+let moodData = JSON.parse(localStorage.getItem('dashboard-mood') || '[]');
+
+function getTodayKey() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function formatDate(dateStr) {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+}
+
+function saveMood() {
+  localStorage.setItem('dashboard-mood', JSON.stringify(moodData));
+}
+
+function updateTodayMood() {
+  const today = getTodayKey();
+  const todayEntry = moodData.find(entry => entry.date === today);
+  
+  if (todayEntry) {
+    moodTodayEl.textContent = todayEntry.mood + ' ' + (todayEntry.note || '');
+  } else {
+    moodTodayEl.textContent = 'Not logged';
+  }
+}
+
+function renderHistory() {
+  moodHistoryEl.innerHTML = '';
+  
+  if (moodData.length === 0) {
+    moodHistoryEl.innerHTML = '<li style="opacity: 0.5; text-align: center;">No moods logged yet</li>';
+    return;
+  }
+  
+  // Show last 7 entries (most recent first)
+  const recent = moodData.slice(-7).reverse();
+  
+  recent.forEach(entry => {
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <span class="mood-icon">${entry.mood}</span>
+      <div class="mood-entry">
+        <span class="mood-date">${formatDate(entry.date)}</span>
+        <span class="mood-text">${entry.note || 'No note'}</span>
+      </div>
+    `;
+    moodHistoryEl.appendChild(li);
+  });
+}
+
+// Mood button click handlers
+moodBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    // Remove selected from all
+    moodBtns.forEach(b => b.classList.remove('selected'));
+    // Add to clicked
+    btn.classList.add('selected');
+    selectedMood = btn.dataset.mood;
+    
+    // Save mood immediately when selected
+    const today = getTodayKey();
+    const note = moodNoteInput.value.trim();
+    
+    // Remove existing entry for today
+    moodData = moodData.filter(entry => entry.date !== today);
+    
+    // Add new entry
+    moodData.push({
+      date: today,
+      mood: selectedMood,
+      note: note
+    });
+    
+    saveMood();
+    updateTodayMood();
+    renderHistory();
+  });
+});
+
+// Initial load
+updateTodayMood();
+renderHistory();
