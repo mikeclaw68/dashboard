@@ -2611,3 +2611,138 @@ async function fetchInstagram(username) {
     instaPostsEl.appendChild(div);
   });
 }
+
+// Twitter Feed Widget
+const twitterUsername = document.getElementById('twitter-username');
+const twitterFetchBtn = document.getElementById('twitter-fetch');
+const twitterListEl = document.getElementById('twitter-list');
+
+// Load saved username
+const savedUsername = localStorage.getItem('dashboard-twitter-username');
+if (savedUsername) {
+  twitterUsername.value = savedUsername;
+  fetchTwitter(savedUsername);
+}
+
+twitterFetchBtn.addEventListener('click', () => {
+  const username = twitterUsername.value.trim().replace(/^@/, '');
+  if (username) {
+    localStorage.setItem('dashboard-twitter-username', username);
+    fetchTwitter(username);
+  }
+});
+
+twitterUsername.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    const username = twitterUsername.value.trim().replace(/^@/, '');
+    if (username) {
+      localStorage.setItem('dashboard-twitter-username', username);
+      fetchTwitter(username);
+    }
+  }
+});
+
+async function fetchTwitter(username) {
+  twitterListEl.innerHTML = '<li class="twitter-item">Loading tweets...</li>';
+  
+  try {
+    // Note: Twitter API v2 requires API key
+    // Using Nitter as alternative (if available)
+    const res = await fetch(`https://nitter.net/${username}/rss`);
+    
+    if (!res.ok) throw new Error('User not found');
+    
+    const text = await res.text();
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(text, 'text/xml');
+    const items = xml.querySelectorAll('item');
+    
+    renderTweets(items, username);
+  } catch (e) {
+    console.error('Twitter fetch error:', e);
+    // Show demo tweets
+    renderDemoTweets(username);
+  }
+}
+
+function renderTweets(items, username) {
+  twitterListEl.innerHTML = '';
+  
+  const maxItems = 8;
+  for (let i = 0; i < Math.min(items.length, maxItems); i++) {
+    const item = items[i];
+    const title = item.querySelector('title')?.textContent || '';
+    const description = item.querySelector('description')?.textContent || '';
+    const pubDate = item.querySelector('pubDate')?.textContent || '';
+    
+    // Extract tweet text from description (remove HTML)
+    const tweetText = description.replace(/<[^>]*>/g, '').trim();
+    
+    const li = document.createElement('li');
+    li.className = 'twitter-item';
+    li.innerHTML = `
+      <div class="twitter-header">
+        <div class="twitter-avatar"></div>
+        <div>
+          <div class="twitter-name">@${username}</div>
+          <div class="twitter-handle">${formatTwitterDate(pubDate)}</div>
+        </div>
+      </div>
+      <div class="twitter-content">${escapeHtml(tweetText)}</div>
+    `;
+    
+    twitterListEl.appendChild(li);
+  }
+}
+
+function renderDemoTweets(username) {
+  const demoTweets = [
+    'This is a demo tweet. Configure Twitter API key for live tweets.',
+    'Another example tweet showing how tweets would appear.',
+    'Twitter API v2 requires a developer account for access.',
+    'Enter your Twitter username to see the feed structure.',
+    'The widget is ready for API integration when you have credentials.'
+  ];
+  
+  twitterListEl.innerHTML = '';
+  
+  demoTweets.forEach((tweet, i) => {
+    const li = document.createElement('li');
+    li.className = 'twitter-item';
+    li.innerHTML = `
+      <div class="twitter-header">
+        <div class="twitter-avatar"></div>
+        <div>
+          <div class="twitter-name">@${username}</div>
+          <div class="twitter-handle">${i + 1}h ago</div>
+        </div>
+      </div>
+      <div class="twitter-content">${tweet}</div>
+    `;
+    twitterListEl.appendChild(li);
+  });
+}
+
+function formatTwitterDate(dateStr) {
+  if (!dateStr) return '';
+  try {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+    
+    if (diffMins < 60) return `${diffMins}m`;
+    if (diffHours < 24) return `${diffHours}h`;
+    return `${diffDays}d`;
+  } catch (e) {
+    return '';
+  }
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}

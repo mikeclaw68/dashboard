@@ -3044,3 +3044,113 @@ body.bg-image {
   font-size: 1.5rem;
   opacity: 0.5;
 }
+
+/* Twitter Feed Widget */
+.twitter h3 {
+  margin-bottom: 15px;
+}
+
+.twitter-info {
+  text-align: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.twitter-idle-icon {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.twitter-idle-text {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.twitter-input {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.twitter-input input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.twitter-input input:focus {
+  outline: 2px solid #4fc3f7;
+}
+
+.twitter-input input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.twitter-input button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #1DA1F2;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.twitter-input button:hover {
+  background: #0d8ecf;
+}
+
+.twitter-list {
+  list-style: none;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.twitter-item {
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.twitter-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.twitter-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #1DA1F2;
+}
+
+.twitter-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.twitter-handle {
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+
+.twitter-content {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.twitter-meta {
+  font-size: 0.75rem;
+  opacity: 0.5;
+}
