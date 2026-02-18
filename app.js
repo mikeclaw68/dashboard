@@ -1271,3 +1271,95 @@ habitInput.addEventListener('keypress', (e) => {
 
 // Initial render
 renderHabits();
+
+// Book Reading Tracker Widget
+const bookTitleInput = document.getElementById('book-title');
+const bookPagesInput = document.getElementById('book-pages');
+const bookAddBtn = document.getElementById('book-add');
+const bookList = document.getElementById('book-list');
+
+let books = JSON.parse(localStorage.getItem('dashboard-books') || '[]');
+
+function saveBooks() {
+  localStorage.setItem('dashboard-books', JSON.stringify(books));
+}
+
+function renderBooks() {
+  bookList.innerHTML = '';
+  
+  if (books.length === 0) {
+    bookList.innerHTML = '<li style="opacity: 0.5; text-align: center; padding: 20px;">No books yet</li>';
+    return;
+  }
+  
+  books.forEach((book, index) => {
+    const li = document.createElement('li');
+    li.className = 'book-item';
+    
+    const progress = book.currentPage || 0;
+    const total = book.totalPages || 1;
+    const percent = Math.min(100, Math.round((progress / total) * 100));
+    const isComplete = progress >= total;
+    
+    li.innerHTML = `
+      <div class="book-item-header">
+        <span class="book-title">${book.title}${isComplete ? ' ✅' : ''}</span>
+        <button class="book-delete" data-index="${index}">✕</button>
+      </div>
+      <div class="book-progress">
+        <div class="book-progress-bar">
+          <div class="book-progress-fill" style="width: ${percent}%"></div>
+        </div>
+        <span class="book-pages">${progress}/${total}</span>
+      </div>
+      <div class="book-update">
+        <input type="number" placeholder="Update page..." value="${progress}" data-index="${index}">
+        <button class="book-update-btn" data-index="${index}">Update</button>
+      </div>
+    `;
+    
+    // Delete handler
+    li.querySelector('.book-delete').addEventListener('click', () => {
+      books.splice(index, 1);
+      saveBooks();
+      renderBooks();
+    });
+    
+    // Update handler
+    li.querySelector('.book-update-btn').addEventListener('click', (e) => {
+      const idx = parseInt(e.target.dataset.index);
+      const input = li.querySelector('.book-update input');
+      const newPage = parseInt(input.value) || 0;
+      books[idx].currentPage = Math.min(newPage, books[idx].totalPages);
+      saveBooks();
+      renderBooks();
+    });
+    
+    bookList.appendChild(li);
+  });
+}
+
+function addBook() {
+  const title = bookTitleInput.value.trim();
+  const pages = parseInt(bookPagesInput.value);
+  
+  if (title && pages > 0) {
+    books.push({
+      title: title,
+      totalPages: pages,
+      currentPage: 0
+    });
+    saveBooks();
+    bookTitleInput.value = '';
+    bookPagesInput.value = '';
+    renderBooks();
+  }
+}
+
+bookAddBtn.addEventListener('click', addBook);
+bookPagesInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') addBook();
+});
+
+// Initial render
+renderBooks();
