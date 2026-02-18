@@ -3357,3 +3357,60 @@ body.bg-image {
   color: rgba(255, 255, 255, 0.5);
   cursor: not-allowed;
 }
+
+/* WiFi Signal Widget */
+.wifi h3 {
+  margin-bottom: 15px;
+}
+
+.wifi-display {
+  text-align: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.wifi-icon {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.wifi-strength {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #4fc3f7;
+}
+
+.wifi-strength.excellent { color: #4caf50; }
+.wifi-strength.good { color: #8bc34a; }
+.wifi-strength.fair { color: #ffb74d; }
+.wifi-strength.weak { color: #ff6b6b; }
+
+.wifi-label {
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+.wifi-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wifi-detail {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.wifi-detail span:first-child {
+  opacity: 0.6;
+}
+
+.wifi-detail span:last-child {
+  font-weight: 500;
+}

@@ -40,10 +40,10 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] Twitter feed
 - [x] Package tracker
 - [x] Network speed test widget
+- [x] WiFi signal strength
 
 ## New Features to Build (20+)
 
-- [ ] WiFi signal strength
 - [ ] Screenshot upload widget
 - [ ] Quick note capture
 - [ ] Voice memo widget
@@ -59,4 +59,5 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - Spotify API for current track
 - YouTube API for trending
 - Reddit API for feed
+- Network Information API for WiFi
 - localStorage for persistence

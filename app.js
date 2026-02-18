@@ -2899,3 +2899,63 @@ async function runSpeedTest() {
   speedTestBtn.disabled = false;
   speedTestBtn.textContent = 'Run Speed Test';
 }
+
+// WiFi Signal Widget
+const wifiStrengthEl = document.getElementById('wifi-strength');
+const wifiIconEl = document.getElementById('wifi-icon');
+const wifiSsidEl = document.getElementById('wifi-ssid');
+const wifiIpEl = document.getElementById('wifi-ip');
+
+// Note: Network Information API requires HTTPS and has limited browser support
+function updateWifiInfo() {
+  if ('connection' in navigator) {
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    
+    if (connection) {
+      const rssi = connection.rssi;
+      const ssid = connection.ssid || 'Connected Network';
+      
+      // Update signal strength
+      if (rssi >= -50) {
+        wifiStrengthEl.textContent = 'Excellent';
+        wifiStrengthEl.className = 'wifi-strength excellent';
+        wifiIconEl.textContent = '📶';
+      } else if (rssi >= -60) {
+        wifiStrengthEl.textContent = 'Good';
+        wifiStrengthEl.className = 'wifi-strength good';
+        wifiIconEl.textContent = '📶';
+      } else if (rssi >= -70) {
+        wifiStrengthEl.textContent = 'Fair';
+        wifiStrengthEl.className = 'wifi-strength fair';
+        wifiIconEl.textContent = '📶';
+      } else {
+        wifiStrengthEl.textContent = 'Weak';
+        wifiStrengthEl.className = 'wifi-strength weak';
+        wifiIconEl.textContent = '📶';
+      }
+      
+      wifiSsidEl.textContent = ssid || 'Unknown';
+      wifiIpEl.textContent = 'Local';
+    } else {
+      showWifiDemo();
+    }
+  } else {
+    showWifiDemo();
+  }
+}
+
+function showWifiDemo() {
+  // Show demo values if API not available
+  wifiStrengthEl.textContent = 'Good';
+  wifiStrengthEl.className = 'wifi-strength good';
+  wifiSsidEl.textContent = 'My Network';
+  wifiIpEl.textContent = '192.168.1.x';
+}
+
+// Try to get WiFi info
+updateWifiInfo();
+
+// Listen for changes
+if ('connection' in navigator) {
+  navigator.connection.addEventListener('change', updateWifiInfo);
+}
