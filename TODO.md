@@ -13,7 +13,7 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] Calendar widget
 - [x] Music player controls
 - [x] Todo list widget
-- [ ] News/feed widget
+- [x] News/feed widget
 
 ## Tech Stack
 - Plain HTML/CSS/JS

@@ -372,6 +372,117 @@ todoClearCompleted.addEventListener('click', () => {
 
 renderTodos();
 
+// News Feed
+const feedUrlInput = document.getElementById('feed-url');
+const feedLoadBtn = document.getElementById('feed-load-btn');
+const feedRefreshBtn = document.getElementById('feed-refresh');
+const newsList = document.getElementById('news-list');
+
+let currentFeedUrl = localStorage.getItem('dashboard-feed-url') || 'https://hnrss.org/frontpage';
+
+feedUrlInput.value = currentFeedUrl;
+
+async function fetchFeed(url) {
+  newsList.innerHTML = '<div class="news-loading">Loading feed...</div>';
+  
+  try {
+    // Use a CORS proxy for RSS feeds
+    const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+    const res = await fetch(proxyUrl);
+    const text = await res.text();
+    
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(text, 'text/xml');
+    
+    const items = xml.querySelectorAll('item');
+    
+    if (items.length === 0) {
+      // Try Atom format
+      const entries = xml.querySelectorAll('entry');
+      if (entries.length === 0) {
+        throw new Error('No feed items found');
+      }
+      renderNews(entries, 'atom');
+    } else {
+      renderNews(items, 'rss');
+    }
+    
+    localStorage.setItem('dashboard-feed-url', url);
+    currentFeedUrl = url;
+  } catch (e) {
+    newsList.innerHTML = `<div class="news-error">Error loading feed: ${e.message}</div>`;
+  }
+}
+
+function renderNews(items, format) {
+  newsList.innerHTML = '';
+  
+  if (items.length === 0) {
+    newsList.innerHTML = '<div class="news-empty">No articles found</div>';
+    return;
+  }
+  
+  const maxItems = 10;
+  for (let i = 0; i < Math.min(items.length, maxItems); i++) {
+    const item = items[i];
+    let title, link, date;
+    
+    if (format === 'rss') {
+      title = item.querySelector('title')?.textContent || 'No title';
+      link = item.querySelector('link')?.textContent || '#';
+      date = item.querySelector('pubDate')?.textContent || item.querySelector('dc\\:date')?.textContent;
+    } else {
+      title = item.querySelector('title')?.textContent || 'No title';
+      link = item.querySelector('link')?.textContent || item.querySelector('link')?.getAttribute('href') || '#';
+      date = item.querySelector('published')?.textContent || item.querySelector('updated')?.textContent;
+    }
+    
+    // Format date
+    let dateStr = '';
+    if (date) {
+      try {
+        const d = new Date(date);
+        dateStr = d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      } catch (e) {
+        dateStr = date;
+      }
+    }
+    
+    const div = document.createElement('div');
+    div.className = 'news-item';
+    div.innerHTML = `
+      <a href="${link}" target="_blank" rel="noopener">${title}</a>
+      ${dateStr ? `<div class="news-meta">${dateStr}</div>` : ''}
+    `;
+    newsList.appendChild(div);
+  }
+}
+
+feedLoadBtn.addEventListener('click', () => {
+  const url = feedUrlInput.value.trim();
+  if (url) {
+    fetchFeed(url);
+  }
+});
+
+feedUrlInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    const url = feedUrlInput.value.trim();
+    if (url) {
+      fetchFeed(url);
+    }
+  }
+});
+
+feedRefreshBtn.addEventListener('click', () => {
+  if (currentFeedUrl) {
+    fetchFeed(currentFeedUrl);
+  }
+});
+
+// Load default feed on page load
+fetchFeed(currentFeedUrl);
+
 // Notes - save to localStorage
 const notes = document.getElementById('notes');
 notes.value = localStorage.getItem('dashboard-notes') || '';
