@@ -24,10 +24,10 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] Daily quote/motivation
 - [x] Habit tracker
 - [x] Book reading tracker
+- [x] Water intake tracker
 
 ## New Features to Build (20+)
 
-- [ ] Water intake tracker
 - [ ] Sleep tracker
 - [ ] Mood tracker
 - [ ] Expense tracker

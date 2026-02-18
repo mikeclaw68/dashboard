@@ -1623,3 +1623,95 @@ body.bg-image {
 .book-update button:hover {
   background: rgba(255, 255, 255, 0.3);
 }
+
+/* Water Intake Tracker Widget */
+.water h3 {
+  margin-bottom: 15px;
+}
+
+.water-display {
+  text-align: center;
+  padding: 15px 0;
+}
+
+.water-count {
+  font-size: 4rem;
+  font-weight: 700;
+  color: #4fc3f7;
+  line-height: 1;
+}
+
+.water-label {
+  font-size: 0.9rem;
+  opacity: 0.7;
+  margin-top: 5px;
+}
+
+.water-progress {
+  margin: 15px 0;
+}
+
+.water-progress-bar {
+  height: 12px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.water-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4fc3f7, #29b6f6);
+  border-radius: 6px;
+  transition: width 0.3s ease;
+  width: 0%;
+}
+
+.water-controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.water-controls button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #4fc3f7;
+  color: #000;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.water-controls button:hover {
+  background: #29b6f6;
+}
+
+.water-controls button#water-remove {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.water-controls button#water-remove:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.water-footer {
+  display: flex;
+  justify-content: center;
+}
+
+.water-footer button {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 5px 10px;
+}
+
+.water-footer button:hover {
+  color: rgba(255, 255, 255, 0.8);
+}

@@ -1363,3 +1363,60 @@ bookPagesInput.addEventListener('keypress', (e) => {
 
 // Initial render
 renderBooks();
+
+// Water Intake Tracker Widget
+const waterCountEl = document.getElementById('water-count');
+const waterProgressFill = document.getElementById('water-progress-fill');
+const waterAddBtn = document.getElementById('water-add');
+const waterRemoveBtn = document.getElementById('water-remove');
+const waterResetBtn = document.getElementById('water-reset');
+
+const DAILY_GOAL = 8;
+
+function getTodayKey() {
+  return new Date().toISOString().split('T')[0];
+}
+
+let waterCount = parseInt(localStorage.getItem('dashboard-water-' + getTodayKey()) || '0');
+
+function updateWaterDisplay() {
+  waterCountEl.textContent = waterCount;
+  const percent = Math.min(100, (waterCount / DAILY_GOAL) * 100);
+  waterProgressFill.style.width = percent + '%';
+  
+  // Change color when goal reached
+  if (waterCount >= DAILY_GOAL) {
+    waterProgressFill.style.background = 'linear-gradient(90deg, #4caf50, #8bc34a)';
+    waterCountEl.style.color = '#4caf50';
+  } else {
+    waterProgressFill.style.background = 'linear-gradient(90deg, #4fc3f7, #29b6f6)';
+    waterCountEl.style.color = '#4fc3f7';
+  }
+}
+
+function saveWater() {
+  localStorage.setItem('dashboard-water-' + getTodayKey(), waterCount);
+}
+
+waterAddBtn.addEventListener('click', () => {
+  waterCount++;
+  saveWater();
+  updateWaterDisplay();
+});
+
+waterRemoveBtn.addEventListener('click', () => {
+  if (waterCount > 0) {
+    waterCount--;
+    saveWater();
+    updateWaterDisplay();
+  }
+});
+
+waterResetBtn.addEventListener('click', () => {
+  waterCount = 0;
+  saveWater();
+  updateWaterDisplay();
+});
+
+// Initial display
+updateWaterDisplay();
