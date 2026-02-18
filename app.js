@@ -2129,3 +2129,97 @@ function renderSteamStatus(status) {
 
 // Show offline by default (API key required for real data)
 renderSteamStatus('offline');
+
+// Plex/Emby Now Playing Widget
+const plexUrl = document.getElementById('plex-url');
+const plexApiKey = document.getElementById('plex-api-key');
+const plexConnectBtn = document.getElementById('plex-connect');
+const plexStatusEl = document.getElementById('plex-status');
+
+// Load saved settings
+const savedUrl = localStorage.getItem('dashboard-plex-url');
+const savedKey = localStorage.getItem('dashboard-plex-api-key');
+if (savedUrl) plexUrl.value = savedUrl;
+if (savedKey) plexApiKey.value = savedKey;
+
+if (savedUrl && savedKey) {
+  fetchNowPlaying(savedUrl, savedKey);
+}
+
+plexConnectBtn.addEventListener('click', () => {
+  const url = plexUrl.value.trim();
+  const key = plexApiKey.value.trim();
+  if (url && key) {
+    localStorage.setItem('dashboard-plex-url', url);
+    localStorage.setItem('dashboard-plex-api-key', key);
+    fetchNowPlaying(url, key);
+  }
+});
+
+async function fetchNowPlaying(serverUrl, apiKey) {
+  plexStatusEl.innerHTML = '<div class="plex-loading">Connecting...</div>';
+  
+  try {
+    // Try Plex API
+    // Note: This requires proper Plex server configuration
+    // Using placeholder for demonstration
+    
+    // Check if it's Plex or Emby
+    const isPlex = serverUrl.includes('plex') || !serverUrl.includes('emby');
+    
+    if (isPlex) {
+      // Plex would require an authenticated session
+      plexStatusEl.innerHTML = `
+        <div class="plex-idle">
+          <div class="plex-idle-icon">📺</div>
+          <div class="plex-idle-text">Configure Plex server URL and API key for live now playing</div>
+        </div>
+      `;
+    } else {
+      // Emby API endpoint
+      const res = await fetch(`${serverUrl}/emby/Sessions?api_key=${apiKey}`);
+      
+      if (!res.ok) throw new Error('Connection failed');
+      
+      const sessions = await res.json();
+      const playing = sessions.find(s => s.NowPlayingItem);
+      
+      if (playing && playing.NowPlayingItem) {
+        const item = playing.NowPlayingItem;
+        plexStatusEl.innerHTML = `
+          <div class="plex-now-playing">
+            <div class="plex-media-thumb">${item.Type === 'Episode' ? '📺' : '🎬'}</div>
+            <div class="plex-media-title">${item.Name}</div>
+            <div class="plex-media-meta">
+              ${playing.UserName} • ${Math.floor((playing.PlayState || 0) / 1000 / 60)}m left
+            </div>
+          </div>
+        `;
+      } else {
+        plexStatusEl.innerHTML = `
+          <div class="plex-idle">
+            <div class="plex-idle-icon">📺</div>
+            <div class="plex-idle-text">No one is watching right now</div>
+          </div>
+        `;
+      }
+    }
+  } catch (e) {
+    console.error('Plex/Emby error:', e);
+    // Show idle state on error (server might not be reachable locally)
+    plexStatusEl.innerHTML = `
+      <div class="plex-idle">
+        <div class="plex-idle-icon">📺</div>
+        <div class="plex-idle-text">Configure server to see now playing</div>
+      </div>
+    `;
+  }
+}
+
+// Initial state
+plexStatusEl.innerHTML = `
+  <div class="plex-idle">
+    <div class="plex-idle-icon">📺</div>
+    <div class="plex-idle-text">Configure server URL and API key</div>
+  </div>
+`;

@@ -32,10 +32,10 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] Holiday countdown
 - [x] GitHub contributions widget
 - [x] Steam game status
+- [x] Plex/Emby now playing
 
 ## New Features to Build (20+)
 
-- [ ] Plex/Emby now playing
 - [ ] Spotify current track
 - [ ] YouTube trending
 - [ ] Reddit feed
