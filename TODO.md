@@ -2,7 +2,7 @@
 
 A personal dashboard for the Raspberry Pi with dual monitors.
 
-## Features to Build
+## Completed Features
 
 - [x] Clock and date widget
 - [x] Weather widget (using wttr.in)
@@ -15,20 +15,40 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] Todo list widget
 - [x] News/feed widget
 
+## New Features to Build (20+)
+
+- [ ] World clock - multiple timezones
+- [ ] Cryptocurrency prices
+- [ ] Stock market widget
+- [ ] Currency converter
+- [ ] BMI calculator
+- [ ] Pomodoro timer
+- [ ] Countdown timer to specific date
+- [ ] Daily quote/motivation
+- [ ] Habit tracker
+- [ ] Book reading tracker
+- [ ] Water intake tracker
+- [ ] Sleep tracker
+- [ ] Mood tracker
+- [ ] Expense tracker
+- [ ] Birthday reminders
+- [ ] Holiday countdown
+- [ ] GitHub contributions widget
+- [ ] Steam game status
+- [ ] Plex/Emby now playing
+- [ ] Spotify current track
+- [ ] YouTube trending
+- [ ] Reddit feed
+- [ ] Instagram feed
+- [ ] Twitter feed
+- [ ] Package tracker (FedEx, UPS, etc)
+- [ ] Network speed test widget
+- [ ] WiFi signal strength
+- [ ] Screenshot upload widget
+- [ ] Quick note capture
+- [ ] Voice memo widget
+
 ## Tech Stack
 - Plain HTML/CSS/JS
 - wttr.in for weather
-- /proc for system stats
-
-## Files
-- index.html - Main dashboard
-- style.css - Styling
-- app.js - JavaScript for widgets
-
-## Running
-Serve with any static server:
-```bash
-npx serve .
-# or
-python3 -m http.server 8080
-```
+- localStorage for persistence
