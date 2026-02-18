@@ -125,6 +125,179 @@ document.getElementById('next-month').addEventListener('click', () => {
 
 renderCalendar();
 
+// Music Player
+const audio = new Audio();
+let playlist = JSON.parse(localStorage.getItem('dashboard-playlist') || '[]');
+let currentTrackIndex = -1;
+let isPlaying = false;
+
+const playBtn = document.getElementById('play-btn');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const progressBar = document.getElementById('progress');
+const volumeBar = document.getElementById('volume');
+const currentTimeEl = document.getElementById('current-time');
+const durationEl = document.getElementById('duration');
+const trackNameEl = document.getElementById('track-name');
+const trackArtistEl = document.getElementById('track-artist');
+const playlistEl = document.getElementById('playlist');
+const addBtn = document.getElementById('add-btn');
+const trackUrlInput = document.getElementById('track-url');
+const trackTitleInput = document.getElementById('track-title');
+
+function formatTime(seconds) {
+  if (isNaN(seconds)) return '0:00';
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+function renderPlaylist() {
+  playlistEl.innerHTML = '';
+  playlist.forEach((track, index) => {
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <span>${track.title}</span>
+      <button class="remove-btn" data-index="${index}">✕</button>
+    `;
+    if (index === currentTrackIndex) {
+      li.classList.add('playing');
+    }
+    li.addEventListener('click', (e) => {
+      if (!e.target.classList.contains('remove-btn')) {
+        playTrack(index);
+      }
+    });
+    playlistEl.appendChild(li);
+  });
+  
+  // Remove buttons
+  playlistEl.querySelectorAll('.remove-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const idx = parseInt(e.target.dataset.index);
+      playlist.splice(idx, 1);
+      if (idx < currentTrackIndex) {
+        currentTrackIndex--;
+      } else if (idx === currentTrackIndex) {
+        audio.pause();
+        audio.src = '';
+        currentTrackIndex = -1;
+        isPlaying = false;
+        updatePlayButton();
+      }
+      localStorage.setItem('dashboard-playlist', JSON.stringify(playlist));
+      renderPlaylist();
+    });
+  });
+}
+
+function playTrack(index) {
+  if (index < 0 || index >= playlist.length) return;
+  
+  currentTrackIndex = index;
+  const track = playlist[index];
+  audio.src = track.url;
+  audio.play().then(() => {
+    isPlaying = true;
+    updatePlayButton();
+  }).catch(err => {
+    console.error('Playback error:', err);
+  });
+  
+  trackNameEl.textContent = track.title;
+  trackArtistEl.textContent = track.artist || 'Unknown Artist';
+  renderPlaylist();
+}
+
+function updatePlayButton() {
+  playBtn.textContent = isPlaying ? '⏸' : '▶';
+}
+
+playBtn.addEventListener('click', () => {
+  if (playlist.length === 0) return;
+  
+  if (currentTrackIndex === -1) {
+    playTrack(0);
+  } else if (isPlaying) {
+    audio.pause();
+    isPlaying = false;
+  } else {
+    audio.play();
+    isPlaying = true;
+  }
+  updatePlayButton();
+});
+
+prevBtn.addEventListener('click', () => {
+  if (playlist.length === 0) return;
+  const newIndex = currentTrackIndex <= 0 ? playlist.length - 1 : currentTrackIndex - 1;
+  playTrack(newIndex);
+});
+
+nextBtn.addEventListener('click', () => {
+  if (playlist.length === 0) return;
+  const newIndex = currentTrackIndex >= playlist.length - 1 ? 0 : currentTrackIndex + 1;
+  playTrack(newIndex);
+});
+
+audio.addEventListener('timeupdate', () => {
+  if (audio.duration) {
+    const progress = (audio.currentTime / audio.duration) * 100;
+    progressBar.value = progress;
+    currentTimeEl.textContent = formatTime(audio.currentTime);
+  }
+});
+
+audio.addEventListener('loadedmetadata', () => {
+  durationEl.textContent = formatTime(audio.duration);
+});
+
+audio.addEventListener('ended', () => {
+  // Auto play next track
+  const newIndex = currentTrackIndex >= playlist.length - 1 ? 0 : currentTrackIndex + 1;
+  playTrack(newIndex);
+});
+
+progressBar.addEventListener('input', () => {
+  if (audio.duration) {
+    audio.currentTime = (progressBar.value / 100) * audio.duration;
+  }
+});
+
+volumeBar.addEventListener('input', () => {
+  audio.volume = volumeBar.value / 100;
+  localStorage.setItem('dashboard-volume', volumeBar.value);
+});
+
+// Load saved volume
+const savedVolume = localStorage.getItem('dashboard-volume') || 80;
+volumeBar.value = savedVolume;
+audio.volume = savedVolume / 100;
+
+// Add track
+addBtn.addEventListener('click', () => {
+  const url = trackUrlInput.value.trim();
+  const title = trackTitleInput.value.trim() || 'Unknown Track';
+  
+  if (url) {
+    playlist.push({ url, title, artist: 'Unknown Artist' });
+    localStorage.setItem('dashboard-playlist', JSON.stringify(playlist));
+    trackUrlInput.value = '';
+    trackTitleInput.value = '';
+    renderPlaylist();
+    
+    // If first track, select it
+    if (playlist.length === 1) {
+      currentTrackIndex = 0;
+      trackNameEl.textContent = title;
+      trackArtistEl.textContent = 'Unknown Artist';
+    }
+  }
+});
+
+// Initialize playlist display
+renderPlaylist();
+
 // Notes - save to localStorage
 const notes = document.getElementById('notes');
 notes.value = localStorage.getItem('dashboard-notes') || '';

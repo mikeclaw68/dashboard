@@ -11,7 +11,7 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] Notes section
 - [x] Background image support
 - [x] Calendar widget
-- [ ] Music player controls
+- [x] Music player controls
 - [ ] Todo list widget
 - [ ] News/feed widget
 

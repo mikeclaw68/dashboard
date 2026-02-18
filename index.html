@@ -37,6 +37,39 @@
       <div class="calendar-days" id="calendar-days"></div>
     </div>
     
+    <div class="widget music">
+      <h3>Music Player</h3>
+      <div class="now-playing">
+        <div class="track-name" id="track-name">No track playing</div>
+        <div class="track-artist" id="track-artist">--</div>
+      </div>
+      <div class="progress-bar">
+        <input type="range" id="progress" min="0" max="100" value="0">
+        <div class="time-display">
+          <span id="current-time">0:00</span>
+          <span id="duration">0:00</span>
+        </div>
+      </div>
+      <div class="controls">
+        <button id="prev-btn" title="Previous">⏮</button>
+        <button id="play-btn" title="Play/Pause">▶</button>
+        <button id="next-btn" title="Next">⏭</button>
+      </div>
+      <div class="volume-control">
+        <span>🔊</span>
+        <input type="range" id="volume" min="0" max="100" value="80">
+      </div>
+      <div class="playlist">
+        <h4>Playlist</h4>
+        <ul id="playlist"></ul>
+      </div>
+      <div class="add-track">
+        <input type="text" id="track-url" placeholder="Audio URL...">
+        <input type="text" id="track-title" placeholder="Title...">
+        <button id="add-btn">Add</button>
+      </div>
+    </div>
+    
     <div class="widget links">
       <h3>Quick Links</h3>
       <ul>
