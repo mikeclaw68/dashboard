@@ -30,10 +30,10 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] Expense tracker
 - [x] Birthday reminders
 - [x] Holiday countdown
+- [x] GitHub contributions widget
 
 ## New Features to Build (20+)
 
-- [ ] GitHub contributions widget
 - [ ] Steam game status
 - [ ] Plex/Emby now playing
 - [ ] Spotify current track
@@ -55,4 +55,5 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - Yahoo Finance API for stock prices
 - ExchangeRate-API for currency conversion
 - Quotable API for quotes
+- GitHub API for contributions
 - localStorage for persistence

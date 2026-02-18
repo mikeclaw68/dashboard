@@ -1945,3 +1945,94 @@ function renderHolidays() {
 
 // Initial render
 renderHolidays();
+
+// GitHub Contributions Widget
+const githubUsername = document.getElementById('github-username');
+const githubFetchBtn = document.getElementById('github-fetch');
+const githubStatsEl = document.getElementById('github-stats');
+
+// Load saved username
+const savedUsername = localStorage.getItem('dashboard-github-username');
+if (savedUsername) {
+  githubUsername.value = savedUsername;
+  fetchGitHub(savedUsername);
+}
+
+githubFetchBtn.addEventListener('click', () => {
+  const username = githubUsername.value.trim();
+  if (username) {
+    localStorage.setItem('dashboard-github-username', username);
+    fetchGitHub(username);
+  }
+});
+
+githubUsername.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    const username = githubUsername.value.trim();
+    if (username) {
+      localStorage.setItem('dashboard-github-username', username);
+      fetchGitHub(username);
+    }
+  }
+});
+
+async function fetchGitHub(username) {
+  githubStatsEl.innerHTML = '<div class="github-loading">Loading...</div>';
+  
+  try {
+    // Fetch user profile
+    const userRes = await fetch(`https://api.github.com/users/${username}`);
+    if (!userRes.ok) throw new Error('User not found');
+    const user = await userRes.json();
+    
+    // Fetch events (for recent activity)
+    const eventsRes = await fetch(`https://api.github.com/users/${username}/events?per_page=10`);
+    const events = eventsRes.ok ? await eventsRes.json() : [];
+    
+    // Count contributions from last 7 days
+    const now = new Date();
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const recentContributions = events.filter(e => {
+      const eventDate = new Date(e.created_at);
+      return eventDate >= sevenDaysAgo && (e.type === 'PushEvent' || e.type === 'PullRequestEvent' || e.type === 'IssuesEvent');
+    }).length;
+    
+    // Calculate total contributions (approximate from public repos)
+    const totalContribs = user.public_repos + user.followers;
+    
+    renderGitHubStats(user, recentContributions, totalContribs);
+  } catch (e) {
+    console.error('GitHub fetch error:', e);
+    githubStatsEl.innerHTML = `<div class="github-error">Error: ${e.message}</div>`;
+  }
+}
+
+function renderGitHubStats(user, recentContribs, totalContribs) {
+  githubStatsEl.innerHTML = `
+    <div class="github-profile">
+      <img src="${user.avatar_url}" alt="${user.login}" class="github-avatar">
+      <div>
+        <div class="github-name">${user.name || user.login}</div>
+        <div class="github-username">@${user.login}</div>
+      </div>
+    </div>
+    <div class="github-contributions">
+      <div class="github-stat">
+        <div class="github-stat-value">${user.public_repos}</div>
+        <div class="github-stat-label">Repositories</div>
+      </div>
+      <div class="github-stat">
+        <div class="github-stat-value">${user.followers}</div>
+        <div class="github-stat-label">Followers</div>
+      </div>
+      <div class="github-stat">
+        <div class="github-stat-value">${recentContribs}</div>
+        <div class="github-stat-label">This Week</div>
+      </div>
+      <div class="github-stat">
+        <div class="github-stat-value">${user.following}</div>
+        <div class="github-stat-label">Following</div>
+      </div>
+    </div>
+  `;
+}
