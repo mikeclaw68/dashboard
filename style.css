@@ -343,6 +343,144 @@ body.bg-image {
   border-radius: 3px;
 }
 
+/* Todo Widget */
+.todo h3 {
+  margin-bottom: 15px;
+}
+
+.todo-input {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.todo-input input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.todo-input input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.todo-input input:focus {
+  outline: 2px solid #4fc3f7;
+}
+
+.todo-input button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #4fc3f7;
+  color: #000;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.todo-input button:hover {
+  background: #29b6f6;
+}
+
+.todo-list {
+  list-style: none;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 15px;
+}
+
+.todo-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  background: rgba(0, 0, 0, 0.2);
+  transition: background 0.2s;
+}
+
+.todo-list li:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.todo-list li.completed {
+  opacity: 0.5;
+}
+
+.todo-list li.completed span {
+  text-decoration: line-through;
+}
+
+.todo-list li input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #4fc3f7;
+}
+
+.todo-list li span {
+  flex: 1;
+  font-size: 0.9rem;
+  word-break: break-word;
+}
+
+.todo-list li .delete-btn {
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  cursor: pointer;
+  font-size: 1rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+  padding: 4px;
+}
+
+.todo-list li:hover .delete-btn {
+  opacity: 1;
+}
+
+.todo-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.todo-stats button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.todo-stats button:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Todo scrollbar */
+.todo-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.todo-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.todo-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
 .links ul {
   list-style: none;
 }

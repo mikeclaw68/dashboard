@@ -298,6 +298,80 @@ addBtn.addEventListener('click', () => {
 // Initialize playlist display
 renderPlaylist();
 
+// Todo List
+let todos = JSON.parse(localStorage.getItem('dashboard-todos') || '[]');
+
+const todoInput = document.getElementById('todo-input');
+const todoAddBtn = document.getElementById('todo-add-btn');
+const todoList = document.getElementById('todo-list');
+const todoCount = document.getElementById('todo-count');
+const todoClearCompleted = document.getElementById('todo-clear-completed');
+
+function renderTodos() {
+  todoList.innerHTML = '';
+  todos.forEach((todo, index) => {
+    const li = document.createElement('li');
+    if (todo.completed) {
+      li.classList.add('completed');
+    }
+    li.innerHTML = `
+      <input type="checkbox" ${todo.completed ? 'checked' : ''} data-index="${index}">
+      <span>${todo.text}</span>
+      <button class="delete-btn" data-index="${index}">✕</button>
+    `;
+    todoList.appendChild(li);
+  });
+  
+  // Checkbox handlers
+  todoList.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+    checkbox.addEventListener('change', (e) => {
+      const index = parseInt(e.target.dataset.index);
+      todos[index].completed = e.target.checked;
+      localStorage.setItem('dashboard-todos', JSON.stringify(todos));
+      renderTodos();
+    });
+  });
+  
+  // Delete handlers
+  todoList.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const index = parseInt(e.target.dataset.index);
+      todos.splice(index, 1);
+      localStorage.setItem('dashboard-todos', JSON.stringify(todos));
+      renderTodos();
+    });
+  });
+  
+  // Update count
+  const activeCount = todos.filter(t => !t.completed).length;
+  todoCount.textContent = `${activeCount} task${activeCount !== 1 ? 's' : ''} remaining`;
+}
+
+function addTodo() {
+  const text = todoInput.value.trim();
+  if (text) {
+    todos.push({ text, completed: false });
+    localStorage.setItem('dashboard-todos', JSON.stringify(todos));
+    todoInput.value = '';
+    renderTodos();
+  }
+}
+
+todoAddBtn.addEventListener('click', addTodo);
+todoInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    addTodo();
+  }
+});
+
+todoClearCompleted.addEventListener('click', () => {
+  todos = todos.filter(t => !t.completed);
+  localStorage.setItem('dashboard-todos', JSON.stringify(todos));
+  renderTodos();
+});
+
+renderTodos();
+
 // Notes - save to localStorage
 const notes = document.getElementById('notes');
 notes.value = localStorage.getItem('dashboard-notes') || '';
