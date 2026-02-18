@@ -59,6 +59,72 @@ async function fetchStats() {
 fetchStats();
 setInterval(fetchStats, 5000);
 
+// Calendar
+let currentMonth = new Date();
+
+function renderCalendar() {
+  const year = currentMonth.getFullYear();
+  const month = currentMonth.getMonth();
+  
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'];
+  
+  document.getElementById('month-year').textContent = `${monthNames[month]} ${year}`;
+  
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const daysInPrevMonth = new Date(year, month, 0).getDate();
+  
+  const today = new Date();
+  const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
+  const todayDate = today.getDate();
+  
+  const daysContainer = document.getElementById('calendar-days');
+  daysContainer.innerHTML = '';
+  
+  // Previous month days
+  for (let i = firstDay - 1; i >= 0; i--) {
+    const day = document.createElement('span');
+    day.textContent = daysInPrevMonth - i;
+    day.className = 'other-month';
+    daysContainer.appendChild(day);
+  }
+  
+  // Current month days
+  for (let i = 1; i <= daysInMonth; i++) {
+    const day = document.createElement('span');
+    day.textContent = i;
+    if (isCurrentMonth && i === todayDate) {
+      day.className = 'today';
+    }
+    daysContainer.appendChild(day);
+  }
+  
+  // Next month days
+  const totalCells = firstDay + daysInMonth;
+  const remainingCells = 7 - (totalCells % 7);
+  if (remainingCells < 7) {
+    for (let i = 1; i <= remainingCells; i++) {
+      const day = document.createElement('span');
+      day.textContent = i;
+      day.className = 'other-month';
+      daysContainer.appendChild(day);
+    }
+  }
+}
+
+document.getElementById('prev-month').addEventListener('click', () => {
+  currentMonth.setMonth(currentMonth.getMonth() - 1);
+  renderCalendar();
+});
+
+document.getElementById('next-month').addEventListener('click', () => {
+  currentMonth.setMonth(currentMonth.getMonth() + 1);
+  renderCalendar();
+});
+
+renderCalendar();
+
 // Notes - save to localStorage
 const notes = document.getElementById('notes');
 notes.value = localStorage.getItem('dashboard-notes') || '';
