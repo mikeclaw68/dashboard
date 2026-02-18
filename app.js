@@ -1034,3 +1034,96 @@ pomodoroModes.forEach(btn => {
     updatePomodoroDisplay();
   });
 });
+
+// Countdown Timer Widget
+const countdownEventInput = document.getElementById('countdown-event');
+const countdownDateInput = document.getElementById('countdown-date');
+const countdownSetBtn = document.getElementById('countdown-set');
+const countdownDisplay = document.getElementById('countdown-display');
+
+let countdownInterval = null;
+let countdownTarget = null;
+let countdownEventName = '';
+
+// Load saved countdown
+const savedEvent = localStorage.getItem('countdown-event');
+const savedDate = localStorage.getItem('countdown-date');
+if (savedEvent && savedDate) {
+  countdownEventInput.value = savedEvent;
+  countdownDateInput.value = savedDate;
+  if (new Date(savedDate) > new Date()) {
+    startCountdown(savedEvent, new Date(savedDate));
+  }
+}
+
+countdownSetBtn.addEventListener('click', () => {
+  const eventName = countdownEventInput.value.trim() || 'Event';
+  const targetDate = new Date(countdownDateInput.value);
+  
+  if (isNaN(targetDate.getTime())) {
+    countdownDisplay.innerHTML = '<div class="countdown-result">Please select a valid date</div>';
+    return;
+  }
+  
+  if (targetDate <= new Date()) {
+    countdownDisplay.innerHTML = '<div class="countdown-result countdown-expired">This date has already passed!</div>';
+    return;
+  }
+  
+  // Save to localStorage
+  localStorage.setItem('countdown-event', countdownEventInput.value);
+  localStorage.setItem('countdown-date', countdownDateInput.value);
+  
+  startCountdown(eventName, targetDate);
+});
+
+function startCountdown(eventName, targetDate) {
+  countdownEventName = eventName;
+  countdownTarget = targetDate;
+  
+  if (countdownInterval) clearInterval(countdownInterval);
+  
+  updateCountdown();
+  countdownInterval = setInterval(updateCountdown, 1000);
+}
+
+function updateCountdown() {
+  const now = new Date();
+  const diff = countdownTarget - now;
+  
+  if (diff <= 0) {
+    clearInterval(countdownInterval);
+    countdownDisplay.innerHTML = `
+      <div class="countdown-event-name">${countdownEventName}</div>
+      <div class="countdown-result countdown-expired">🎉 The event has arrived!</div>
+    `;
+    return;
+  }
+  
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+  
+  countdownDisplay.innerHTML = `
+    <div class="countdown-event-name">${countdownEventName}</div>
+    <div class="countdown-time">
+      <div class="countdown-unit">
+        <span class="countdown-value">${days}</span>
+        <span class="countdown-label">Days</span>
+      </div>
+      <div class="countdown-unit">
+        <span class="countdown-value">${hours.toString().padStart(2, '0')}</span>
+        <span class="countdown-label">Hours</span>
+      </div>
+      <div class="countdown-unit">
+        <span class="countdown-value">${minutes.toString().padStart(2, '0')}</span>
+        <span class="countdown-label">Mins</span>
+      </div>
+      <div class="countdown-unit">
+        <span class="countdown-value">${seconds.toString().padStart(2, '0')}</span>
+        <span class="countdown-label">Secs</span>
+      </div>
+    </div>
+  `;
+}

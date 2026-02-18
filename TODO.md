@@ -20,10 +20,10 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] Currency converter
 - [x] BMI calculator
 - [x] Pomodoro timer
+- [x] Countdown timer to specific date
 
 ## New Features to Build (20+)
 
-- [ ] Countdown timer to specific date
 - [ ] Daily quote/motivation
 - [ ] Habit tracker
 - [ ] Book reading tracker
