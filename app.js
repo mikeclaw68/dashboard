@@ -2959,3 +2959,53 @@ updateWifiInfo();
 if ('connection' in navigator) {
   navigator.connection.addEventListener('change', updateWifiInfo);
 }
+
+// Screenshot Upload Widget
+const screenshotArea = document.getElementById('screenshot-area');
+const screenshotInput = document.getElementById('screenshot-input');
+const screenshotPreview = document.getElementById('screenshot-preview');
+const screenshotImg = document.getElementById('screenshot-img');
+const screenshotClearBtn = document.getElementById('screenshot-clear');
+
+// Load saved screenshot
+const savedScreenshot = localStorage.getItem('dashboard-screenshot');
+if (savedScreenshot) {
+  showScreenshot(savedScreenshot);
+}
+
+// Click to upload
+screenshotArea.addEventListener('click', () => {
+  screenshotInput.click();
+});
+
+// Handle file selection
+screenshotInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const base64 = event.target.result;
+      localStorage.setItem('dashboard-screenshot', base64);
+      showScreenshot(base64);
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+// Clear screenshot
+screenshotClearBtn.addEventListener('click', () => {
+  localStorage.removeItem('dashboard-screenshot');
+  hideScreenshot();
+});
+
+function showScreenshot(base64) {
+  screenshotArea.style.display = 'none';
+  screenshotPreview.style.display = 'block';
+  screenshotImg.src = base64;
+}
+
+function hideScreenshot() {
+  screenshotArea.style.display = 'block';
+  screenshotPreview.style.display = 'none';
+  screenshotInput.value = '';
+}

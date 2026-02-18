@@ -41,10 +41,10 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] Package tracker
 - [x] Network speed test widget
 - [x] WiFi signal strength
+- [x] Screenshot upload widget
 
 ## New Features to Build (20+)
 
-- [ ] Screenshot upload widget
 - [ ] Quick note capture
 - [ ] Voice memo widget
 
