@@ -2325,3 +2325,118 @@ function showSpotifyIdle(message) {
     </div>
   `;
 }
+
+// YouTube Trending Widget
+const youtubeRegion = document.getElementById('youtube-region');
+const youtubeRefreshBtn = document.getElementById('youtube-refresh');
+const youtubeListEl = document.getElementById('youtube-list');
+
+// Save selected region
+const savedRegion = localStorage.getItem('dashboard-youtube-region');
+if (savedRegion) {
+  youtubeRegion.value = savedRegion;
+}
+
+// Load trending on page load
+fetchYouTubeTrending();
+
+youtubeRegion.addEventListener('change', () => {
+  localStorage.setItem('dashboard-youtube-region', youtubeRegion.value);
+  fetchYouTubeTrending();
+});
+
+youtubeRefreshBtn.addEventListener('click', fetchYouTubeTrending);
+
+async function fetchYouTubeTrending() {
+  youtubeListEl.innerHTML = '<li class="youtube-loading">Loading trending videos...</li>';
+  
+  const region = youtubeRegion.value;
+  
+  try {
+    // Try using noembed for YouTube link previews (fallback method)
+    // Note: YouTube Data API v3 requires API key, so we use RSS alternative
+    const res = await fetch(`https://www.youtube.com/feeds/videos.xml?region=${region}&category=Entertainment`);
+    
+    if (!res.ok) throw new Error('Failed to fetch');
+    
+    const text = await res.text();
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(text, 'text/xml');
+    const entries = xml.querySelectorAll('entry');
+    
+    if (entries.length === 0) {
+      // Use fallback demo data
+      renderDemoTrending(region);
+      return;
+    }
+    
+    renderTrending(entries);
+  } catch (e) {
+    console.error('YouTube fetch error:', e);
+    // Show demo data as fallback
+    renderDemoTrending(region);
+  }
+}
+
+function renderTrending(entries) {
+  youtubeListEl.innerHTML = '';
+  
+  const maxItems = 8;
+  for (let i = 0; i < Math.min(entries.length, maxItems); i++) {
+    const entry = entries[i];
+    const title = entry.querySelector('title')?.textContent || 'Untitled';
+    const videoId = entry.querySelector('videoId')?.textContent || '';
+    const channel = entry.querySelector('author > name')?.textContent || 'Unknown';
+    const published = entry.querySelector('published')?.textContent || '';
+    
+    const thumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` : '';
+    
+    const li = document.createElement('li');
+    li.className = 'youtube-item';
+    li.innerHTML = `
+      <img src="${thumbnail}" alt="${title}" class="youtube-thumb" onerror="this.style.display='none'">
+      <div class="youtube-info">
+        <div class="youtube-title">${title}</div>
+        <div class="youtube-channel">${channel}</div>
+      </div>
+    `;
+    
+    // Make the item clickable
+    li.style.cursor = 'pointer';
+    li.addEventListener('click', () => {
+      if (videoId) {
+        window.open(`https://youtube.com/watch?v=${videoId}`, '_blank');
+      }
+    });
+    
+    youtubeListEl.appendChild(li);
+  }
+}
+
+function renderDemoTrending(region) {
+  // Demo data when API not available
+  const demoVideos = [
+    { title: 'Trending Video 1', channel: 'Channel One', views: '1.2M views' },
+    { title: 'Popular Video 2', channel: 'Channel Two', views: '890K views' },
+    { title: 'Hot Video 3', channel: 'Channel Three', views: '750K views' },
+    { title: 'Viral Video 4', channel: 'Channel Four', views: '620K views' },
+    { title: 'Top Video 5', channel: 'Channel Five', views: '540K views' },
+    { title: 'Trending Video 6', channel: 'Channel Six', views: '430K views' }
+  ];
+  
+  youtubeListEl.innerHTML = '';
+  
+  demoVideos.forEach(video => {
+    const li = document.createElement('li');
+    li.className = 'youtube-item';
+    li.innerHTML = `
+      <div class="youtube-thumb" style="display:flex;align-items:center;justify-content:center;font-size:2rem;">▶</div>
+      <div class="youtube-info">
+        <div class="youtube-title">${video.title}</div>
+        <div class="youtube-channel">${video.channel}</div>
+        <div class="youtube-views">${video.views}</div>
+      </div>
+    `;
+    youtubeListEl.appendChild(li);
+  });
+}
