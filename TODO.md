@@ -16,10 +16,10 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] News/feed widget
 - [x] World clock - multiple timezones
 - [x] Cryptocurrency prices
+- [x] Stock market widget
 
 ## New Features to Build (20+)
 
-- [ ] Stock market widget
 - [ ] Currency converter
 - [ ] BMI calculator
 - [ ] Pomodoro timer
@@ -52,4 +52,5 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - Plain HTML/CSS/JS
 - wttr.in for weather
 - CoinGecko API for crypto prices
+- Yahoo Finance API for stock prices
 - localStorage for persistence

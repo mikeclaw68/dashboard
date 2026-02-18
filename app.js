@@ -679,3 +679,76 @@ fetchCryptoPrices();
 
 // Refresh every 60 seconds
 setInterval(fetchCryptoPrices, 60000);
+
+// Stock Market Widget
+const stocksList = document.getElementById('stocks-list');
+const stocksRefreshBtn = document.getElementById('stocks-refresh');
+
+// Popular stocks to track
+const stockSymbols = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA', 'META', 'NVDA', 'JPM'];
+
+function formatStockPrice(price) {
+  return '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function formatStockChange(change) {
+  const sign = change >= 0 ? '+' : '';
+  return sign + change.toFixed(2) + '%';
+}
+
+async function fetchStockPrices() {
+  stocksList.innerHTML = '<div class="stocks-loading">Loading stocks...</div>';
+  
+  try {
+    // Using Yahoo Finance API via a proxy (query1.finance.yahoo.com)
+    const symbols = stockSymbols.join(',');
+    const res = await fetch(`https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbols}`);
+    
+    if (!res.ok) {
+      throw new Error('API request failed');
+    }
+    
+    const data = await res.json();
+    if (data.quoteResponse && data.quoteResponse.result) {
+      renderStockPrices(data.quoteResponse.result);
+    } else {
+      throw new Error('No data returned');
+    }
+  } catch (e) {
+    console.error('Stock fetch error:', e);
+    stocksList.innerHTML = '<div class="stocks-error">Unable to load stocks</div>';
+  }
+}
+
+function renderStockPrices(stocks) {
+  stocksList.innerHTML = '';
+  
+  stocks.forEach(stock => {
+    const price = stock.regularMarketPrice || 0;
+    const change = stock.regularMarketChangePercent || 0;
+    const changeClass = change >= 0 ? 'positive' : 'negative';
+    const name = stock.shortName || stock.longName || stock.symbol;
+    
+    const div = document.createElement('div');
+    div.className = 'stock-item';
+    div.innerHTML = `
+      <div class="stock-info">
+        <span class="stock-symbol">${stock.symbol}</span>
+        <span class="stock-name">${name.length > 20 ? name.substring(0, 20) + '...' : name}</span>
+      </div>
+      <div class="stock-price">
+        <div class="stock-value">${formatStockPrice(price)}</div>
+        <div class="stock-change ${changeClass}">${formatStockChange(change)}</div>
+      </div>
+    `;
+    stocksList.appendChild(div);
+  });
+}
+
+stocksRefreshBtn.addEventListener('click', fetchStockPrices);
+
+// Initial fetch
+fetchStockPrices();
+
+// Refresh every 60 seconds
+setInterval(fetchStockPrices, 60000);
