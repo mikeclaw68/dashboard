@@ -2440,3 +2440,111 @@ function renderDemoTrending(region) {
     youtubeListEl.appendChild(li);
   });
 }
+
+// Reddit Feed Widget
+const redditSubreddit = document.getElementById('reddit-subreddit');
+const redditLoadBtn = document.getElementById('reddit-load');
+const redditListEl = document.getElementById('reddit-list');
+
+// Load saved subreddit
+const savedSubreddit = localStorage.getItem('dashboard-reddit-subreddit');
+if (savedSubreddit) {
+  redditSubreddit.value = savedSubreddit;
+  fetchReddit(savedSubreddit);
+}
+
+redditLoadBtn.addEventListener('click', () => {
+  const subreddit = redditSubreddit.value.trim().replace(/^\/r\//, '').replace(/^r\//, '');
+  if (subreddit) {
+    localStorage.setItem('dashboard-reddit-subreddit', subreddit);
+    fetchReddit(subreddit);
+  }
+});
+
+redditSubreddit.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    const subreddit = redditSubreddit.value.trim().replace(/^\/r\//, '').replace(/^r\//, '');
+    if (subreddit) {
+      localStorage.setItem('dashboard-reddit-subreddit', subreddit);
+      fetchReddit(subreddit);
+    }
+  }
+});
+
+async function fetchReddit(subreddit) {
+  redditListEl.innerHTML = '<li class="reddit-loading">Loading posts...</li>';
+  
+  try {
+    // Use Reddit's JSON API
+    const res = await fetch(`https://www.reddit.com/r/${subreddit}/hot.json?limit=10`);
+    
+    if (!res.ok) {
+      throw new Error('Subreddit not found');
+    }
+    
+    const data = await res.json();
+    const posts = data.data.children;
+    
+    renderRedditPosts(posts);
+  } catch (e) {
+    console.error('Reddit fetch error:', e);
+    redditListEl.innerHTML = `<li class="reddit-error">Error: ${e.message}</li>`;
+  }
+}
+
+function renderRedditPosts(posts) {
+  redditListEl.innerHTML = '';
+  
+  if (posts.length === 0) {
+    redditListEl.innerHTML = '<li class="reddit-loading">No posts found</li>';
+    return;
+  }
+  
+  posts.forEach(post => {
+    const p = post.data;
+    const li = document.createElement('li');
+    li.className = 'reddit-item';
+    
+    const title = p.title;
+    const score = p.score;
+    const author = p.author;
+    const numComments = p.num_comments;
+    const permalink = `https://reddit.com${p.permalink}`;
+    
+    li.innerHTML = `
+      <div class="reddit-score">
+        <span class="reddit-score-value">${formatRedditNumber(score)}</span>
+        <span class="reddit-score-label">points</span>
+      </div>
+      <div class="reddit-content">
+        <div class="reddit-title">${escapeHtml(title)}</div>
+        <div class="reddit-meta">
+          by ${escapeHtml(author)} • <span class="reddit-comments">${formatRedditNumber(numComments)} comments</span>
+        </div>
+      </div>
+    `;
+    
+    // Click to open post
+    li.style.cursor = 'pointer';
+    li.addEventListener('click', () => {
+      window.open(permalink, '_blank');
+    });
+    
+    redditListEl.appendChild(li);
+  });
+}
+
+function formatRedditNumber(num) {
+  if (num >= 1000000) {
+    return (num / 1000000).toFixed(1) + 'M';
+  } else if (num >= 1000) {
+    return (num / 1000).toFixed(1) + 'K';
+  }
+  return num.toString();
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
