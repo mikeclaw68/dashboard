@@ -33,10 +33,10 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] GitHub contributions widget
 - [x] Steam game status
 - [x] Plex/Emby now playing
+- [x] Spotify current track
 
 ## New Features to Build (20+)
 
-- [ ] Spotify current track
 - [ ] YouTube trending
 - [ ] Reddit feed
 - [ ] Instagram feed
@@ -56,4 +56,5 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - ExchangeRate-API for currency conversion
 - Quotable API for quotes
 - GitHub API for contributions
+- Spotify API for current track
 - localStorage for persistence

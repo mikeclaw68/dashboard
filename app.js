@@ -2223,3 +2223,105 @@ plexStatusEl.innerHTML = `
     <div class="plex-idle-text">Configure server URL and API key</div>
   </div>
 `;
+
+// Spotify Current Track Widget
+const spotifyToken = document.getElementById('spotify-token');
+const spotifyConnectBtn = document.getElementById('spotify-connect');
+const spotifyStatusEl = document.getElementById('spotify-status');
+
+// Load saved token
+const savedToken = localStorage.getItem('dashboard-spotify-token');
+if (savedToken) {
+  spotifyToken.value = savedToken;
+  fetchSpotify(savedToken);
+}
+
+spotifyConnectBtn.addEventListener('click', () => {
+  const token = spotifyToken.value.trim();
+  if (token) {
+    localStorage.setItem('dashboard-spotify-token', token);
+    fetchSpotify(token);
+  }
+});
+
+spotifyToken.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    const token = spotifyToken.value.trim();
+    if (token) {
+      localStorage.setItem('dashboard-spotify-token', token);
+      fetchSpotify(token);
+    }
+  }
+});
+
+let spotifyInterval = null;
+
+async function fetchSpotify(token) {
+  spotifyStatusEl.innerHTML = '<div class="spotify-idle"><div class="spotify-idle-icon">⏳</div><div class="spotify-idle-text">Loading...</div></div>';
+  
+  try {
+    const res = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    
+    if (res.status === 204 || res.status === 401) {
+      // No track playing or expired token
+      showSpotifyIdle('No track playing or token expired');
+      return;
+    }
+    
+    if (!res.ok) throw new Error('API error');
+    
+    const data = await res.json();
+    
+    if (!data.item) {
+      showSpotifyIdle('No track playing');
+      return;
+    }
+    
+    const track = data.item;
+    const album = track.album;
+    const artists = track.artists.map(a => a.name).join(', ');
+    
+    // Get best available image
+    const image = album.images[0]?.url || '';
+    
+    spotifyStatusEl.innerHTML = `
+      <div class="spotify-track">
+        <img src="${image}" alt="${track.name}" class="spotify-art" onerror="this.style.display='none'">
+        <div class="spotify-info">
+          <div class="spotify-title">${track.name}</div>
+          <div class="spotify-artist">${artists}</div>
+          <div class="spotify-album">${album.name}</div>
+          ${data.is_playing ? `
+            <div class="spotify-playing">
+              <div class="spotify-bar"></div>
+              <div class="spotify-bar"></div>
+              <div class="spotify-bar"></div>
+              <span>Playing</span>
+            </div>
+          ` : '<div style="margin-top:8px;font-size:0.8rem;opacity:0.6">Paused</div>'}
+        </div>
+      </div>
+    `;
+    
+    // Refresh every 30 seconds if playing
+    if (spotifyInterval) clearInterval(spotifyInterval);
+    if (data.is_playing) {
+      spotifyInterval = setInterval(() => fetchSpotify(token), 30000);
+    }
+    
+  } catch (e) {
+    console.error('Spotify error:', e);
+    showSpotifyIdle('Error: ' + e.message);
+  }
+}
+
+function showSpotifyIdle(message) {
+  spotifyStatusEl.innerHTML = `
+    <div class="spotify-idle">
+      <div class="spotify-idle-icon">🎵</div>
+      <div class="spotify-idle-text">${message}</div>
+    </div>
+  `;
+}
