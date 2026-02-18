@@ -67,6 +67,42 @@
       </div>
     </div>
     
+    <div class="widget currency">
+      <h3>Currency Converter</h3>
+      <div class="currency-converter">
+        <input type="number" id="currency-amount" placeholder="Amount" value="1">
+        <div class="currency-row">
+          <select id="currency-from">
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+            <option value="JPY">JPY</option>
+            <option value="CNY">CNY</option>
+            <option value="INR">INR</option>
+            <option value="AUD">AUD</option>
+            <option value="CAD">CAD</option>
+            <option value="CHF">CHF</option>
+            <option value="BTC">BTC</option>
+          </select>
+          <span>→</span>
+          <select id="currency-to">
+            <option value="EUR">EUR</option>
+            <option value="USD">USD</option>
+            <option value="GBP">GBP</option>
+            <option value="JPY">JPY</option>
+            <option value="CNY">CNY</option>
+            <option value="INR">INR</option>
+            <option value="AUD">AUD</option>
+            <option value="CAD">CAD</option>
+            <option value="CHF">CHF</option>
+            <option value="BTC">BTC</option>
+          </select>
+        </div>
+        <button id="currency-convert">Convert</button>
+        <div class="currency-result" id="currency-result">--</div>
+      </div>
+    </div>
+    
     <div class="widget calendar">
       <h3>Calendar</h3>
       <div class="calendar-header">

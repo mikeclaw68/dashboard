@@ -981,3 +981,79 @@ body.bg-image {
   background: rgba(255, 255, 255, 0.3);
   border-radius: 3px;
 }
+
+/* Currency Converter Widget */
+.currency h3 {
+  margin-bottom: 15px;
+}
+
+.currency-converter {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.currency-converter input[type="number"] {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-size: 1rem;
+}
+
+.currency-converter input[type="number"]:focus {
+  outline: 2px solid #4fc3f7;
+}
+
+.currency-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.currency-row span {
+  font-size: 1.2rem;
+  opacity: 0.7;
+}
+
+.currency-converter select {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.currency-converter select option {
+  background: #1a1a2e;
+}
+
+.currency-converter button {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #4fc3f7;
+  color: #000;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.currency-converter button:hover {
+  background: #29b6f6;
+}
+
+.currency-result {
+  text-align: center;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #4fc3f7;
+}

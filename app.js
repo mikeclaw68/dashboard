@@ -752,3 +752,92 @@ fetchStockPrices();
 
 // Refresh every 60 seconds
 setInterval(fetchStockPrices, 60000);
+
+// Currency Converter Widget
+const currencyAmount = document.getElementById('currency-amount');
+const currencyFrom = document.getElementById('currency-from');
+const currencyTo = document.getElementById('currency-to');
+const currencyConvertBtn = document.getElementById('currency-convert');
+const currencyResult = document.getElementById('currency-result');
+
+let exchangeRates = {};
+
+// Fetch exchange rates from ExchangeRate-API (free tier)
+async function fetchExchangeRates() {
+  try {
+    const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+    const data = await res.json();
+    exchangeRates = data.rates;
+    
+    // Store BTC rate separately since it's against USD
+    if (exchangeRates.BTC) {
+      // Already have BTC rate
+    }
+    
+    // Convert initial value
+    convertCurrency();
+  } catch (e) {
+    console.error('Exchange rate fetch error:', e);
+    currencyResult.textContent = 'Error loading rates';
+  }
+}
+
+function convertCurrency() {
+  const amount = parseFloat(currencyAmount.value) || 0;
+  const from = currencyFrom.value;
+  const to = currencyTo.value;
+  
+  if (Object.keys(exchangeRates).length === 0) {
+    currencyResult.textContent = 'Loading rates...';
+    return;
+  }
+  
+  // Convert via USD (base currency)
+  let result;
+  if (from === 'USD') {
+    result = amount * (exchangeRates[to] || 1);
+  } else if (to === 'USD') {
+    result = amount / (exchangeRates[from] || 1);
+  } else {
+    // Convert from -> USD -> to
+    const inUSD = amount / (exchangeRates[from] || 1);
+    result = inUSD * (exchangeRates[to] || 1);
+  }
+  
+  // Format based on currency
+  let formatted;
+  if (to === 'BTC') {
+    formatted = result.toFixed(8) + ' BTC';
+  } else if (result >= 1000) {
+    formatted = result.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ' + to;
+  } else if (result >= 1) {
+    formatted = result.toFixed(2) + ' ' + to;
+  } else {
+    formatted = result.toFixed(4) + ' ' + to;
+  }
+  
+  currencyResult.textContent = formatted;
+}
+
+// Event listeners
+currencyConvertBtn.addEventListener('click', convertCurrency);
+currencyAmount.addEventListener('input', convertCurrency);
+currencyFrom.addEventListener('change', convertCurrency);
+currencyTo.addEventListener('change', convertCurrency);
+
+// Load saved currency preferences
+const savedFrom = localStorage.getItem('dashboard-currency-from');
+const savedTo = localStorage.getItem('dashboard-currency-to');
+if (savedFrom) currencyFrom.value = savedFrom;
+if (savedTo) currencyTo.value = savedTo;
+
+// Save preferences on change
+currencyFrom.addEventListener('change', () => {
+  localStorage.setItem('dashboard-currency-from', currencyFrom.value);
+});
+currencyTo.addEventListener('change', () => {
+  localStorage.setItem('dashboard-currency-to', currencyTo.value);
+});
+
+// Initial fetch
+fetchExchangeRates();
