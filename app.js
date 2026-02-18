@@ -2746,3 +2746,84 @@ function escapeHtml(text) {
   div.textContent = text;
   return div.innerHTML;
 }
+
+// Package Tracker Widget
+const packageNumber = document.getElementById('package-number');
+const packageCarrier = document.getElementById('package-carrier');
+const packageTrackBtn = document.getElementById('package-track');
+const packageListEl = document.getElementById('package-list');
+
+let packages = JSON.parse(localStorage.getItem('dashboard-packages') || '[]');
+
+// Load saved packages
+renderPackages();
+
+packageTrackBtn.addEventListener('click', addPackage);
+
+function addPackage() {
+  const number = packageNumber.value.trim().toUpperCase();
+  const carrier = packageCarrier.value;
+  
+  if (!number) return;
+  
+  packages.push({
+    number: number,
+    carrier: carrier,
+    status: 'In Transit',
+    events: [
+      { date: new Date().toISOString(), location: 'Package added', status: 'In Transit' }
+    ]
+  });
+  
+  savePackages();
+  packageNumber.value = '';
+  renderPackages();
+}
+
+function savePackages() {
+  localStorage.setItem('dashboard-packages', JSON.stringify(packages));
+}
+
+function renderPackages() {
+  packageListEl.innerHTML = '';
+  
+  if (packages.length === 0) {
+    packageListEl.innerHTML = '<li style="opacity: 0.5; text-align: center;">No packages tracked</li>';
+    return;
+  }
+  
+  packages.forEach((pkg, index) => {
+    const li = document.createElement('li');
+    li.className = 'package-item';
+    
+    const latestEvent = pkg.events[pkg.events.length - 1];
+    
+    li.innerHTML = `
+      <div class="package-header">
+        <span class="package-number">${pkg.number}</span>
+        <span class="package-carrier">${pkg.carrier}</span>
+      </div>
+      <div class="package-status">${pkg.status}</div>
+      <div class="package-timeline">
+        ${pkg.events.slice(-3).reverse().map(event => `
+          <div class="package-event">
+            <div class="package-event-date">${formatPackageDate(event.date)}</div>
+            <div class="package-event-location">${event.status}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    
+    packageListEl.appendChild(li);
+  });
+}
+
+function formatPackageDate(dateStr) {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-US', { 
+    month: 'short', 
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
