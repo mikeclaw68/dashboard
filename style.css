@@ -1,0 +1,92 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  min-height: 100vh;
+  color: #fff;
+  padding: 20px;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.widget {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.clock {
+  grid-column: span 2;
+  text-align: center;
+}
+
+.clock .time {
+  font-size: 4rem;
+  font-weight: 300;
+}
+
+.clock .date {
+  font-size: 1.5rem;
+  opacity: 0.7;
+}
+
+.weather {
+  text-align: center;
+}
+
+.weather-icon {
+  font-size: 3rem;
+}
+
+.weather-temp {
+  font-size: 1.5rem;
+}
+
+.system .stat {
+  padding: 8px 0;
+  font-size: 1.1rem;
+}
+
+.links ul {
+  list-style: none;
+}
+
+.links a {
+  color: #4fc3f7;
+  text-decoration: none;
+  padding: 5px 0;
+  display: block;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
+
+.notes textarea {
+  width: 100%;
+  height: 150px;
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  padding: 10px;
+  font-family: inherit;
+  resize: none;
+}
+
+.notes textarea:focus {
+  outline: 2px solid #4fc3f7;
+}

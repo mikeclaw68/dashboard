@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="dashboard">
+    <div class="widget clock">
+      <div class="time" id="time">--:--</div>
+      <div class="date" id="date">---</div>
+    </div>
+    
+    <div class="widget weather">
+      <div class="weather-icon">🌤️</div>
+      <div class="weather-temp" id="weather">Loading...</div>
+    </div>
+    
+    <div class="widget system">
+      <div class="stat">CPU: <span id="cpu">--</span>%</div>
+      <div class="stat">RAM: <span id="ram">--</span>%</div>
+      <div class="stat">Disk: <span id="disk">--</span>%</div>
+    </div>
+    
+    <div class="widget links">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="http://127.0.0.1:18789/" target="_blank">OpenClaw</a></li>
+        <li><a href="http://192.168.68.140:5173/" target="_blank">Vite Dev</a></li>
+      </ul>
+    </div>
+    
+    <div class="widget notes">
+      <h3>Notes</h3>
+      <textarea id="notes" placeholder="Your notes here..."></textarea>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>
