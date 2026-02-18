@@ -2036,3 +2036,96 @@ function renderGitHubStats(user, recentContribs, totalContribs) {
     </div>
   `;
 }
+
+// Steam Status Widget
+const steamId = document.getElementById('steam-id');
+const steamFetchBtn = document.getElementById('steam-fetch');
+const steamStatusEl = document.getElementById('steam-status');
+
+// Load saved Steam ID
+const savedSteamId = localStorage.getItem('dashboard-steam-id');
+if (savedSteamId) {
+  steamId.value = savedSteamId;
+  fetchSteam(savedSteamId);
+}
+
+steamFetchBtn.addEventListener('click', () => {
+  const id = steamId.value.trim();
+  if (id) {
+    localStorage.setItem('dashboard-steam-id', id);
+    fetchSteam(id);
+  }
+});
+
+steamId.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    const id = steamId.value.trim();
+    if (id) {
+      localStorage.setItem('dashboard-steam-id', id);
+      fetchSteam(id);
+    }
+  }
+});
+
+async function fetchSteam(steamIdOrName) {
+  steamStatusEl.innerHTML = '<div class="steam-loading">Loading...</div>';
+  
+  try {
+    // First resolve the vanity URL or use the ID directly
+    // Note: Steam Web API requires API key for most endpoints
+    // Using steamPowered API as alternative
+    const res = await fetch(`https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=STEAM_API_KEY&vanityurl=${steamIdOrName}`);
+    
+    // Since we don't have an API key, show instructions
+    steamStatusEl.innerHTML = `
+      <div class="steam-profile">
+        <div style="text-align: center; width: 100%;">
+          <div style="font-size: 3rem;">🎮</div>
+          <div class="steam-name">${steamIdOrName}</div>
+          <div class="steam-state offline">
+            <span class="steam-dot offline"></span> API key required
+          </div>
+        </div>
+      </div>
+      <div class="steam-game">
+        <div class="steam-game-label">Note</div>
+        <div class="steam-game-name">Configure Steam API key in app.js for live data</div>
+      </div>
+    `;
+  } catch (e) {
+    console.error('Steam fetch error:', e);
+    steamStatusEl.innerHTML = `<div class="steam-error">Error: ${e.message}</div>`;
+  }
+}
+
+// Alternative: Simple manual status toggle for demo
+const steamStatusManual = document.getElementById('steam-status');
+
+function renderSteamStatus(status) {
+  const states = {
+    'online': { label: 'Online', class: 'online', icon: '🟢' },
+    'away': { label: 'Away', class: 'away', icon: '🟡' },
+    'offline': { label: 'Offline', class: 'offline', icon: '⚫' }
+  };
+  
+  const current = states[status] || states.offline;
+  
+  steamStatusEl.innerHTML = `
+    <div class="steam-profile">
+      <div style="font-size: 3rem;">🎮</div>
+      <div>
+        <div class="steam-name">Steam User</div>
+        <div class="steam-state ${current.class}">
+          <span class="steam-dot ${current.class}"></span> ${current.label}
+        </div>
+      </div>
+    </div>
+    <div class="steam-game" style="text-align: center;">
+      <div class="steam-game-label">Currently Playing</div>
+      <div class="steam-game-name">Configure Steam API key in app.js</div>
+    </div>
+  `;
+}
+
+// Show offline by default (API key required for real data)
+renderSteamStatus('offline');

@@ -31,10 +31,10 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] Birthday reminders
 - [x] Holiday countdown
 - [x] GitHub contributions widget
+- [x] Steam game status
 
 ## New Features to Build (20+)
 
-- [ ] Steam game status
 - [ ] Plex/Emby now playing
 - [ ] Spotify current track
 - [ ] YouTube trending
