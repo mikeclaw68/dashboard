@@ -1175,3 +1175,99 @@ quoteRefreshBtn.addEventListener('click', fetchQuote);
 
 // Initial fetch
 fetchQuote();
+
+// Habit Tracker Widget
+const habitInput = document.getElementById('habit-input');
+const habitAddBtn = document.getElementById('habit-add');
+const habitList = document.getElementById('habit-list');
+const habitCompletedEl = document.getElementById('habit-completed');
+
+// Get today's date string for daily reset
+function getTodayKey() {
+  return new Date().toISOString().split('T')[0];
+}
+
+let habits = JSON.parse(localStorage.getItem('dashboard-habits') || '[]');
+let completedToday = JSON.parse(localStorage.getItem('dashboard-habits-completed-' + getTodayKey()) || []);
+
+function saveHabits() {
+  localStorage.setItem('dashboard-habits', JSON.stringify(habits));
+}
+
+function saveCompleted() {
+  localStorage.setItem('dashboard-habits-completed-' + getTodayKey(), JSON.stringify(completedToday));
+  updateStats();
+}
+
+function updateStats() {
+  const total = habits.length;
+  const done = completedToday.length;
+  habitCompletedEl.textContent = `${done}/${total} completed today`;
+}
+
+function renderHabits() {
+  habitList.innerHTML = '';
+  
+  habits.forEach((habit, index) => {
+    const li = document.createElement('li');
+    const isCompleted = completedToday.includes(habit.id);
+    
+    if (isCompleted) {
+      li.classList.add('completed');
+    }
+    
+    li.innerHTML = `
+      <input type="checkbox" ${isCompleted ? 'checked' : ''} data-id="${habit.id}">
+      <span class="habit-name">${habit.name}</span>
+      <button class="habit-delete" data-id="${habit.id}">✕</button>
+    `;
+    
+    // Checkbox handler
+    li.querySelector('input[type="checkbox"]').addEventListener('change', (e) => {
+      if (e.target.checked) {
+        if (!completedToday.includes(habit.id)) {
+          completedToday.push(habit.id);
+        }
+      } else {
+        completedToday = completedToday.filter(id => id !== habit.id);
+      }
+      saveCompleted();
+      renderHabits();
+    });
+    
+    // Delete handler
+    li.querySelector('.habit-delete').addEventListener('click', () => {
+      habits = habits.filter(h => h.id !== habit.id);
+      completedToday = completedToday.filter(id => id !== habit.id);
+      saveHabits();
+      saveCompleted();
+      renderHabits();
+    });
+    
+    habitList.appendChild(li);
+  });
+  
+  updateStats();
+}
+
+function addHabit() {
+  const name = habitInput.value.trim();
+  if (name) {
+    const habit = {
+      id: Date.now().toString(),
+      name: name
+    };
+    habits.push(habit);
+    saveHabits();
+    habitInput.value = '';
+    renderHabits();
+  }
+}
+
+habitAddBtn.addEventListener('click', addHabit);
+habitInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') addHabit();
+});
+
+// Initial render
+renderHabits();

@@ -22,10 +22,10 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] Pomodoro timer
 - [x] Countdown timer to specific date
 - [x] Daily quote/motivation
+- [x] Habit tracker
 
 ## New Features to Build (20+)
 
-- [ ] Habit tracker
 - [ ] Book reading tracker
 - [ ] Water intake tracker
 - [ ] Sleep tracker
