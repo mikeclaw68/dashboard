@@ -3046,3 +3046,107 @@ quickNoteText.addEventListener('input', () => {
     }
   }, 1000);
 });
+
+// Voice Memo Widget
+const voiceRecordBtn = document.getElementById('voice-record');
+const voiceStatus = document.getElementById('voice-status');
+const voiceList = document.getElementById('voice-list');
+
+let mediaRecorder = null;
+let audioChunks = [];
+let isRecording = false;
+let memos = JSON.parse(localStorage.getItem('dashboard-voice-memos') || '[]');
+
+// Render saved memos
+renderMemos();
+
+voiceRecordBtn.addEventListener('click', toggleRecording);
+
+async function toggleRecording() {
+  if (!isRecording) {
+    // Start recording
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+      audioChunks = [];
+      
+      mediaRecorder.ondataavailable = (e) => {
+        audioChunks.push(e.data);
+      };
+      
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        const audioUrl = URL.createObjectURL(audioBlob);
+        saveMemo(audioUrl);
+        
+        // Stop all tracks
+        stream.getTracks().forEach(track => track.stop());
+      };
+      
+      mediaRecorder.start();
+      isRecording = true;
+      voiceRecordBtn.textContent = '⏹ Stop';
+      voiceRecordBtn.classList.add('recording');
+      voiceStatus.textContent = 'Recording...';
+      voiceStatus.classList.add('recording');
+      
+    } catch (e) {
+      console.error('Microphone error:', e);
+      voiceStatus.textContent = 'Microphone access denied';
+    }
+  } else {
+    // Stop recording
+    mediaRecorder.stop();
+    isRecording = false;
+    voiceRecordBtn.textContent = '🎤 Record';
+    voiceRecordBtn.classList.remove('recording');
+    voiceStatus.textContent = 'Recording saved!';
+    voiceStatus.classList.remove('recording');
+    
+    setTimeout(() => {
+      voiceStatus.textContent = 'Ready to record';
+    }, 2000);
+  }
+}
+
+function saveMemo(audioUrl) {
+  const memo = {
+    id: Date.now(),
+    url: audioUrl,
+    date: new Date().toISOString()
+  };
+  
+  memos.unshift(memo);
+  localStorage.setItem('dashboard-voice-memos', JSON.stringify(memos));
+  renderMemos();
+}
+
+function deleteMemo(id) {
+  memos = memos.filter(m => m.id !== id);
+  localStorage.setItem('dashboard-voice-memos', JSON.stringify(memos));
+  renderMemos();
+}
+
+function renderMemos() {
+  voiceList.innerHTML = '';
+  
+  if (memos.length === 0) {
+    voiceList.innerHTML = '<li style="opacity: 0.5; text-align: center;">No voice memos yet</li>';
+    return;
+  }
+  
+  memos.forEach(memo => {
+    const li = document.createElement('li');
+    li.className = 'voice-item';
+    li.innerHTML = `
+      <audio controls src="${memo.url}"></audio>
+      <button data-id="${memo.id}">Delete</button>
+    `;
+    
+    li.querySelector('button').addEventListener('click', () => {
+      deleteMemo(memo.id);
+    });
+    
+    voiceList.appendChild(li);
+  });
+}

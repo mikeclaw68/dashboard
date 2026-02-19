@@ -43,10 +43,7 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] WiFi signal strength
 - [x] Screenshot upload widget
 - [x] Quick note capture
-
-## New Features to Build (20+)
-
-- [ ] Voice memo widget
+- [x] Voice memo widget
 
 ## Tech Stack
 - Plain HTML/CSS/JS
@@ -60,4 +57,5 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - YouTube API for trending
 - Reddit API for feed
 - Network Information API for WiFi
+- Web Audio API for voice memos
 - localStorage for persistence
