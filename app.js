@@ -3150,3 +3150,356 @@ function renderMemos() {
     voiceList.appendChild(li);
   });
 }
+
+// ============================================
+// NEW FEATURES: Weather Forecast, Moon Phase, Theme, Activity, Focus Timer, Book Tracker
+// ============================================
+
+// Weather Forecast (5-day)
+async function fetchWeatherForecast() {
+  try {
+    const res = await fetch('https://wttr.in/Rome?format=j1');
+    const data = await res.json();
+    
+    // Current weather
+    const current = data.current_condition[0];
+    const temp = current.temp_C;
+    const desc = current.weatherDesc[0].value;
+    const icon = getWeatherIcon(current.weatherCode[0]);
+    
+    document.getElementById('weather').textContent = `${temp}°C`;
+    document.getElementById('weather-icon').textContent = icon;
+    document.getElementById('weather-desc').textContent = desc;
+    
+    // Sunrise/Sunset
+    const weather = data.weather[0];
+    document.getElementById('sunrise').textContent = weather.astronomy[0].sunrise;
+    document.getElementById('sunset').textContent = weather.astronomy[0].sunset;
+    
+    // 5-day forecast
+    const forecastContainer = document.getElementById('weather-forecast');
+    forecastContainer.innerHTML = '';
+    
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const today = new Date();
+    
+    for (let i = 0; i < 5; i++) {
+      const date = new Date(today);
+      date.setDate(date.getDate() + i);
+      const dayName = i === 0 ? 'Today' : dayNames[date.getDay()];
+      const dayData = data.weather[i];
+      const avgTemp = Math.round((parseInt(dayData.maxtempC) + parseInt(dayData.mintempC)) / 2);
+      const forecastIcon = getWeatherIcon(dayData.hourly[4].weatherCode);
+      
+      const dayEl = document.createElement('div');
+      dayEl.className = 'forecast-day';
+      dayEl.innerHTML = `
+        <div class="day">${dayName}</div>
+        <div class="icon">${forecastIcon}</div>
+        <div class="temp">${avgTemp}°</div>
+      `;
+      forecastContainer.appendChild(dayEl);
+    }
+  } catch (e) {
+    console.error('Weather forecast error:', e);
+  }
+}
+
+function getWeatherIcon(code) {
+  const icons = {
+    '113': '☀️', '116': '⛅', '119': '☁️', '122': '🌫️',
+    '176': '🌧️', '179': '🌨️', '182': '🌨️', '200': '⛈️',
+    '227': '🌨️', '230': '❄️', '248': '🌫️', '263': '🌧️',
+    '266': '🌧️', '281': '🌨️', '284': '🌨️', '293': '🌧️',
+    '296': '🌧️', '299': '🌧️', '302': '🌧️', '305': '🌧️',
+    '308': '🌧️', '311': '🌧️', '314': '🌧️', '317': '🌨️',
+    '320': '🌨️', '323': '🌨️', '326': '🌨️', '329': '❄️',
+    '332': '❄️', '335': '❄️', '338': '❄️', '350': '🌧️',
+    '362': '🌧️', '365': '🌨️', '368': '🌨️', '371': '❄️'
+  };
+  return icons[code] || '🌤️';
+}
+
+fetchWeatherForecast();
+setInterval(fetchWeatherForecast, 600000);
+
+// Moon Phase Widget
+function calculateMoonPhase() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  const day = now.getDate();
+  
+  // Calculate Julian date
+  let jd = (1461 * (year + 4800 + (month - 14) / 12)) / 4;
+  jd += (367 * (month - 2 - 12 * ((month - 14) / 12))) / 12;
+  jd -= (3 * ((year + 4900 + (month - 14) / 12) / 100)) / 4;
+  jd += day - 32075;
+  
+  // Calculate moon phase
+  const daysSinceNew = (jd - 2451550.1) % 29.530588853;
+  const illumination = Math.round((1 - Math.cos(daysSinceNew / 29.530588853 * 2 * Math.PI)) / 2 * 100);
+  
+  const phases = [
+    { name: 'New Moon', icon: '🌑' },
+    { name: 'Waxing Crescent', icon: '🌒' },
+    { name: 'First Quarter', icon: '🌓' },
+    { name: 'Waxing Gibbous', icon: '🌔' },
+    { name: 'Full Moon', icon: '🌕' },
+    { name: 'Waning Gibbous', icon: '🌖' },
+    { name: 'Last Quarter', icon: '🌗' },
+    { name: 'Waning Crescent', icon: '🌘' }
+  ];
+  
+  const phaseIndex = Math.floor((daysSinceNew / 29.530588853) * 8) % 8;
+  const phase = phases[phaseIndex];
+  
+  // Days until next new and full moon
+  const daysUntilNew = 29.530588853 - daysSinceNew;
+  const daysUntilFull = daysUntilNew < 14.76 ? 14.76 - daysSinceNew : 29.530588853 - daysSinceNew + 14.76;
+  
+  const nextNewDate = new Date(now);
+  nextNewDate.setDate(nextNewDate.getDate() + Math.round(daysUntilNew));
+  
+  const nextFullDate = new Date(now);
+  nextFullDate.setDate(nextFullDate.getDate() + Math.round(daysUntilFull));
+  
+  document.getElementById('moon-icon').textContent = phase.icon;
+  document.getElementById('moon-phase').textContent = phase.name;
+  document.getElementById('moon-illumination').textContent = `${illumination}% illuminated`;
+  document.getElementById('next-new-moon').textContent = nextNewDate.toLocaleDateString('en-GB');
+  document.getElementById('next-full-moon').textContent = nextFullDate.toLocaleDateString('en-GB');
+}
+
+calculateMoonPhase();
+
+// Theme Toggle (Dark/Light Mode)
+let isDarkMode = localStorage.getItem('dashboard-dark-mode') !== 'false';
+applyTheme();
+
+document.getElementById('theme-toggle').addEventListener('click', function() {
+  isDarkMode = !isDarkMode;
+  localStorage.setItem('dashboard-dark-mode', isDarkMode);
+  applyTheme();
+});
+
+function applyTheme() {
+  const btn = document.getElementById('theme-toggle');
+  if (isDarkMode) {
+    document.body.classList.remove('light-mode');
+    btn.querySelector('.theme-icon').textContent = '🌙';
+    btn.querySelector('.theme-label').textContent = 'Dark';
+  } else {
+    document.body.classList.add('light-mode');
+    btn.querySelector('.theme-icon').textContent = '☀️';
+    btn.querySelector('.theme-label').textContent = 'Light';
+  }
+}
+
+// Theme Presets
+const themePresets = {
+  ocean: { gradient: 'linear-gradient(135deg, #1a1a2e, #16213e)' },
+  sunset: { gradient: 'linear-gradient(135deg, #2d1f3d, #614385)' },
+  forest: { gradient: 'linear-gradient(135deg, #134e5e, #71b280)' },
+  fire: { gradient: 'linear-gradient(135deg, #4a1c40, #d64c4c)' },
+  mint: { gradient: 'linear-gradient(135deg, #1d2b64, #f8cdda)' },
+  nord: { gradient: 'linear-gradient(135deg, #2e3440, #4c566a)' }
+};
+
+document.querySelectorAll('.theme-color').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const theme = this.dataset.theme;
+    const gradient = themePresets[theme].gradient;
+    document.body.style.background = gradient;
+    localStorage.setItem('dashboard-gradient', gradient);
+  });
+});
+
+document.getElementById('theme-apply-custom').addEventListener('click', function() {
+  const color1 = document.getElementById('theme-color1').value;
+  const color2 = document.getElementById('theme-color2').value;
+  const gradient = `linear-gradient(135deg, ${color1}, ${color2})`;
+  document.body.style.background = gradient;
+  localStorage.setItem('dashboard-gradient', gradient);
+});
+
+// Load saved gradient
+const savedGradient = localStorage.getItem('dashboard-gradient');
+if (savedGradient) {
+  document.body.style.background = savedGradient;
+}
+
+// Activity Tracker
+let activityData = JSON.parse(localStorage.getItem('dashboard-activity') || '{"steps": 0, "calories": 0, "goal": 10000}');
+
+function updateActivityDisplay() {
+  document.getElementById('activity-steps').textContent = activityData.steps.toLocaleString();
+  document.getElementById('activity-calories').textContent = activityData.calories;
+  document.getElementById('activity-goal-input').value = activityData.goal;
+  
+  const percent = Math.min(100, Math.round((activityData.steps / activityData.goal) * 100));
+  document.getElementById('activity-progress-fill').style.width = percent + '%';
+  document.getElementById('activity-percent').textContent = percent + '%';
+}
+
+updateActivityDisplay();
+
+document.getElementById('activity-set-goal').addEventListener('click', function() {
+  activityData.goal = parseInt(document.getElementById('activity-goal-input').value) || 10000;
+  localStorage.setItem('dashboard-activity', JSON.stringify(activityData));
+  updateActivityDisplay();
+});
+
+// Manual step entry (can be connected to device APIs later)
+document.getElementById('activity-steps').parentElement.addEventListener('click', function() {
+  const steps = prompt('Enter steps:', activityData.steps);
+  if (steps !== null) {
+    activityData.steps = parseInt(steps) || 0;
+    activityData.calories = Math.round(activityData.steps * 0.04);
+    localStorage.setItem('dashboard-activity', JSON.stringify(activityData));
+    updateActivityDisplay();
+  }
+});
+
+// Focus Timer
+let focusTime = 25 * 60;
+let focusRemaining = focusTime;
+let focusInterval = null;
+let focusRunning = false;
+let focusSessions = parseInt(localStorage.getItem('dashboard-focus-sessions') || '0');
+
+document.getElementById('focus-sessions').textContent = focusSessions;
+
+function updateFocusDisplay() {
+  const mins = Math.floor(focusRemaining / 60);
+  const secs = focusRemaining % 60;
+  document.getElementById('focus-display').textContent = 
+    `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+}
+
+document.querySelectorAll('.focus-mode').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.focus-mode').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    focusTime = parseInt(this.dataset.time) * 60;
+    focusRemaining = focusTime;
+    if (focusRunning) {
+      clearInterval(focusInterval);
+      focusInterval = setInterval(tickFocus, 1000);
+    }
+    updateFocusDisplay();
+  });
+});
+
+function tickFocus() {
+  if (focusRemaining > 0) {
+    focusRemaining--;
+    updateFocusDisplay();
+  } else {
+    clearInterval(focusInterval);
+    focusRunning = false;
+    focusSessions++;
+    localStorage.setItem('dashboard-focus-sessions', focusSessions);
+    document.getElementById('focus-sessions').textContent = focusSessions;
+    alert('Focus session complete! 🎉');
+  }
+}
+
+document.getElementById('focus-start').addEventListener('click', function() {
+  if (!focusRunning) {
+    focusRunning = true;
+    focusInterval = setInterval(tickFocus, 1000);
+  }
+});
+
+document.getElementById('focus-pause').addEventListener('click', function() {
+  clearInterval(focusInterval);
+  focusRunning = false;
+});
+
+document.getElementById('focus-reset').addEventListener('click', function() {
+  clearInterval(focusInterval);
+  focusRunning = false;
+  focusRemaining = focusTime;
+  updateFocusDisplay();
+});
+
+// Book Tracker
+let books = JSON.parse(localStorage.getItem('dashboard-books') || '[]');
+let booksReadThisYear = parseInt(localStorage.getItem('dashboard-books-read-year') || '0');
+
+function renderBooks() {
+  const list = document.getElementById('book-list');
+  list.innerHTML = '';
+  
+  books.forEach((book, index) => {
+    const li = document.createElement('li');
+    li.className = 'book-item';
+    const progress = book.pages ? Math.round((book.currentPage / book.pages) * 100) : 0;
+    
+    li.innerHTML = `
+      <div class="book-info">
+        <div class="book-title">${book.title}</div>
+        <div class="book-progress">${book.currentPage || 0} / ${book.pages || '?'} pages (${progress}%)</div>
+      </div>
+      <input type="range" min="0" max="${book.pages || 100}" value="${book.currentPage || 0}" data-index="${index}">
+      <button class="book-remove" data-index="${index}">×</button>
+    `;
+    
+    list.appendChild(li);
+  });
+  
+  // Update progress event listeners
+  list.querySelectorAll('input[type="range"]').forEach(input => {
+    input.addEventListener('change', function() {
+      const idx = parseInt(this.dataset.index);
+      books[idx].currentPage = parseInt(this.value);
+      
+      // Check if book completed
+      if (books[idx].pages && books[idx].currentPage >= books[idx].pages) {
+        const year = new Date().getFullYear();
+        const lastYear = parseInt(localStorage.getItem('dashboard-books-read-year-date') || '0');
+        if (lastYear !== year) {
+          booksReadThisYear = 0;
+        }
+        booksReadThisYear++;
+        localStorage.setItem('dashboard-books-read-year', booksReadThisYear);
+        localStorage.setItem('dashboard-books-read-year-date', year);
+        document.getElementById('books-read').textContent = booksReadThisYear;
+        
+        // Remove completed book
+        books.splice(idx, 1);
+      }
+      
+      localStorage.setItem('dashboard-books', JSON.stringify(books));
+      renderBooks();
+    });
+  });
+  
+  // Remove button listeners
+  list.querySelectorAll('.book-remove').forEach(btn => {
+    btn.addEventListener('click', function() {
+      books.splice(parseInt(this.dataset.index), 1);
+      localStorage.setItem('dashboard-books', JSON.stringify(books));
+      renderBooks();
+    });
+  });
+  
+  document.getElementById('books-read').textContent = booksReadThisYear;
+}
+
+document.getElementById('book-add').addEventListener('click', function() {
+  const title = document.getElementById('book-title').value.trim();
+  const pages = parseInt(document.getElementById('book-pages').value);
+  
+  if (title) {
+    books.push({ title, pages: pages || 0, currentPage: 0 });
+    localStorage.setItem('dashboard-books', JSON.stringify(books));
+    document.getElementById('book-title').value = '';
+    document.getElementById('book-pages').value = '';
+    renderBooks();
+  }
+});
+
+renderBooks();
+

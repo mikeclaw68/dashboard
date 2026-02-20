@@ -14,8 +14,41 @@
     </div>
     
     <div class="widget weather">
-      <div class="weather-icon">🌤️</div>
-      <div class="weather-temp" id="weather">Loading...</div>
+      <div class="weather-main">
+        <div class="weather-icon" id="weather-icon">🌤️</div>
+        <div class="weather-temp" id="weather">Loading...</div>
+        <div class="weather-desc" id="weather-desc"></div>
+      </div>
+      <div class="weather-sun">
+        <div class="sun-item">
+          <span class="sun-icon">🌅</span>
+          <span id="sunrise">--:--</span>
+        </div>
+        <div class="sun-item">
+          <span class="sun-icon">🌇</span>
+          <span id="sunset">--:--</span>
+        </div>
+      </div>
+      <div class="weather-forecast" id="weather-forecast"></div>
+    </div>
+    
+    <div class="widget moon">
+      <h3>Moon Phase</h3>
+      <div class="moon-display">
+        <div class="moon-icon" id="moon-icon">🌙</div>
+        <div class="moon-phase" id="moon-phase">--</div>
+        <div class="moon-illumination" id="moon-illumination">--% illuminated</div>
+        <div class="moon-details">
+          <div class="moon-detail">
+            <span>Next New</span>
+            <span id="next-new-moon">--</span>
+          </div>
+          <div class="moon-detail">
+            <span>Next Full</span>
+            <span id="next-full-moon">--</span>
+          </div>
+        </div>
+      </div>
     </div>
     
     <div class="widget world-clock">
@@ -45,6 +78,91 @@
       <div class="stat">CPU: <span id="cpu">--</span>%</div>
       <div class="stat">RAM: <span id="ram">--</span>%</div>
       <div class="stat">Disk: <span id="disk">--</span>%</div>
+    </div>
+    
+    <div class="widget theme">
+      <h3>Theme</h3>
+      <div class="theme-toggle">
+        <button id="theme-toggle" class="theme-btn">
+          <span class="theme-icon">🌙</span>
+          <span class="theme-label">Dark</span>
+        </button>
+      </div>
+      <div class="theme-presets">
+        <h4>Preset Themes</h4>
+        <div class="theme-colors">
+          <button class="theme-color" data-theme="ocean" style="background: linear-gradient(135deg, #1a1a2e, #16213e)" title="Ocean"></button>
+          <button class="theme-color" data-theme="sunset" style="background: linear-gradient(135deg, #2d1f3d, #614385)" title="Sunset"></button>
+          <button class="theme-color" data-theme="forest" style="background: linear-gradient(135deg, #134e5e, #71b280)" title="Forest"></button>
+          <button class="theme-color" data-theme="fire" style="background: linear-gradient(135deg, #4a1c40, #d64c4c)" title="Fire"></button>
+          <button class="theme-color" data-theme="mint" style="background: linear-gradient(135deg, #1d2b64, #f8cdda)" title="Mint"></button>
+          <button class="theme-color" data-theme="nord" style="background: linear-gradient(135deg, #2e3440, #4c566a)" title="Nord"></button>
+        </div>
+      </div>
+      <div class="theme-custom">
+        <h4>Custom Gradient</h4>
+        <input type="color" id="theme-color1" value="#1a1a2e">
+        <input type="color" id="theme-color2" value="#16213e">
+        <button id="theme-apply-custom">Apply</button>
+      </div>
+    </div>
+    
+    <div class="widget activity">
+      <h3>Activity Tracker</h3>
+      <div class="activity-stats">
+        <div class="activity-stat">
+          <span class="activity-icon">👟</span>
+          <span class="activity-value" id="activity-steps">0</span>
+          <span class="activity-label">steps today</span>
+        </div>
+        <div class="activity-stat">
+          <span class="activity-icon">🔥</span>
+          <span class="activity-value" id="activity-calories">0</span>
+          <span class="activity-label">calories</span>
+        </div>
+      </div>
+      <div class="activity-goal">
+        <label>Steps Goal</label>
+        <input type="number" id="activity-goal-input" value="10000">
+        <button id="activity-set-goal">Set</button>
+      </div>
+      <div class="activity-progress">
+        <div class="activity-progress-bar" id="activity-progress-bar">
+          <div class="activity-progress-fill" id="activity-progress-fill"></div>
+        </div>
+        <span id="activity-percent">0%</span>
+      </div>
+    </div>
+    
+    <div class="widget focus">
+      <h3>Focus Timer</h3>
+      <div class="focus-display" id="focus-display">25:00</div>
+      <div class="focus-modes">
+        <button class="focus-mode active" data-time="25">25 min</button>
+        <button class="focus-mode" data-time="45">45 min</button>
+        <button class="focus-mode" data-time="60">60 min</button>
+      </div>
+      <div class="focus-controls">
+        <button id="focus-start">Start</button>
+        <button id="focus-pause">Pause</button>
+        <button id="focus-reset">Reset</button>
+      </div>
+      <div class="focus-stats">
+        <span>Today: <strong id="focus-sessions">0</strong> sessions</span>
+      </div>
+    </div>
+    
+    <div class="widget reading">
+      <h3>Book Tracker</h3>
+      <div class="book-input">
+        <input type="text" id="book-title" placeholder="Book title">
+        <input type="number" id="book-pages" placeholder="Total pages">
+        <button id="book-add">Add</button>
+      </div>
+      <ul class="book-list" id="book-list"></ul>
+      <div class="book-stats">
+        <span>Books read this year: <strong id="books-read">0</strong></span>
+      </div>
     </div>
     
     <div class="widget crypto">
@@ -90,7 +208,7 @@
             <option value="USD">USD</option>
             <option value="GBP">GBP</option>
             <option value="JPY">JPY</option>
-            <option value="CNY">CNY</option>
+            <option name="CNY">CNY</option>
             <option value="INR">INR</option>
             <option value="AUD">AUD</option>
             <option value="CAD">CAD</option>

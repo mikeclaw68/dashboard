@@ -6,6 +6,9 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 
 - [x] Clock and date widget
 - [x] Weather widget (using wttr.in)
+- [x] Weather forecast (5-day)
+- [x] Sunrise/sunset times
+- [x] Moon phase widget
 - [x] System stats (CPU, memory, disk)
 - [x] Quick links panel
 - [x] Notes section
@@ -44,10 +47,15 @@ A personal dashboard for the Raspberry Pi with dual monitors.
 - [x] Screenshot upload widget
 - [x] Quick note capture
 - [x] Voice memo widget
+- [x] Custom CSS themes (6 presets + custom)
+- [x] Dark/light mode toggle
+- [x] Activity tracker widget
+- [x] Focus timer widget
+- [x] Enhanced book tracker
 
 ## Tech Stack
 - Plain HTML/CSS/JS
-- wttr.in for weather
+- wttr.in for weather and forecasts
 - CoinGecko API for crypto prices
 - Yahoo Finance API for stock prices
 - ExchangeRate-API for currency conversion

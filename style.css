@@ -3622,3 +3622,434 @@ body.bg-image {
 .voice-item button:hover {
   background: rgba(255, 107, 107, 0.5);
 }
+
+/* Weather Forecast */
+.weather-sun {
+  display: flex;
+  justify-content: space-around;
+  margin: 10px 0;
+  padding: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 8px;
+}
+
+.sun-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.sun-icon {
+  font-size: 1.2rem;
+}
+
+.weather-forecast {
+  display: flex;
+  gap: 5px;
+  margin-top: 10px;
+  overflow-x: auto;
+  padding-bottom: 5px;
+}
+
+.forecast-day {
+  flex: 1;
+  min-width: 50px;
+  text-align: center;
+  padding: 8px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 8px;
+  font-size: 0.8rem;
+}
+
+.forecast-day .day {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.forecast-day .icon {
+  font-size: 1.2rem;
+}
+
+.forecast-day .temp {
+  font-size: 0.85rem;
+}
+
+/* Moon Phase Widget */
+.moon-display {
+  text-align: center;
+}
+
+.moon-icon {
+  font-size: 4rem;
+  margin: 10px 0;
+}
+
+.moon-phase {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.moon-illumination {
+  font-size: 0.9rem;
+  opacity: 0.7;
+  margin-bottom: 15px;
+}
+
+.moon-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 8px;
+}
+
+.moon-detail {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+}
+
+/* Theme Widget */
+.theme-toggle {
+  margin-bottom: 15px;
+}
+
+.theme-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s;
+}
+
+.theme-btn:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.theme-presets h4,
+.theme-custom h4 {
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  opacity: 0.7;
+}
+
+.theme-colors {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+.theme-color {
+  width: 40px;
+  height: 40px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.theme-color:hover {
+  transform: scale(1.1);
+  border-color: #fff;
+}
+
+.theme-custom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.theme-custom input[type="color"] {
+  width: 40px;
+  height: 35px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.theme-custom button {
+  padding: 8px 15px;
+  background: rgba(255,255,255,0.2);
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.theme-custom button:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+/* Activity Tracker Widget */
+.activity-stats {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.activity-stat {
+  flex: 1;
+  text-align: center;
+  padding: 15px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+}
+
+.activity-icon {
+  font-size: 1.5rem;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.activity-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: block;
+}
+
+.activity-label {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.activity-goal {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.activity-goal label {
+  font-size: 0.8rem;
+}
+
+.activity-goal input {
+  width: 80px;
+  padding: 5px;
+  border: none;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+.activity-goal button {
+  padding: 5px 10px;
+  background: rgba(255,255,255,0.2);
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.activity-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.activity-progress-bar {
+  flex: 1;
+  height: 10px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.activity-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4ade80, #22c55e);
+  border-radius: 5px;
+  transition: width 0.3s;
+}
+
+/* Focus Timer Widget */
+.focus-display {
+  font-size: 3rem;
+  text-align: center;
+  font-weight: 300;
+  margin: 15px 0;
+}
+
+.focus-modes {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.focus-mode {
+  flex: 1;
+  padding: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+}
+
+.focus-mode.active,
+.focus-mode:hover {
+  background: rgba(255,255,255,0.25);
+  border-color: rgba(255,255,255,0.5);
+}
+
+.focus-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.focus-controls button {
+  flex: 1;
+  padding: 10px;
+  background: rgba(255,255,255,0.2);
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.focus-controls button:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.focus-stats {
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* Book Tracker Widget */
+.book-input {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.book-input input {
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+.book-input input::placeholder {
+  color: rgba(255,255,255,0.5);
+}
+
+.book-input button {
+  padding: 8px;
+  background: rgba(255,255,255,0.2);
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.book-list {
+  list-style: none;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.book-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  margin-bottom: 5px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 6px;
+}
+
+.book-info {
+  flex: 1;
+}
+
+.book-title {
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.book-progress {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.book-item input[type="range"] {
+  width: 80px;
+  margin: 0 10px;
+}
+
+.book-remove {
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+.book-stats {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+  font-size: 0.9rem;
+}
+
+/* Light mode styles */
+body.light-mode {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+body.light-mode .widget {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+
+body.light-mode .weather-sun,
+body.light-mode .moon-details,
+body.light-mode .activity-stat,
+body.light-mode .book-item {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode input,
+body.light-mode select,
+body.light-mode textarea {
+  background: rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+
+body.light-mode button {
+  background: rgba(0, 0, 0, 0.15);
+  color: #333;
+}
+
+body.light-mode a {
+  color: #0066cc;
+}
+
+body.light-mode .calendar-header button,
+body.light-mode .pomodoro-mode,
+body.light-mode .focus-mode {
+  background: rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+
+body.light-mode .todo-item.completed span {
+  color: #666;
+}
